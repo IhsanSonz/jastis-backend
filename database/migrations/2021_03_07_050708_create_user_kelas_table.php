@@ -17,6 +17,7 @@ class CreateUserKelasTable extends Migration
             $table->id();
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('kelas_id')->unsigned();
+            $table->enum('role', ['admin', 'guru', 'murid'])->default('murid');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
