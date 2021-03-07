@@ -28,4 +28,24 @@ class Task extends Model
     {
         return $this->belongsTo(Kelas::class, 'kelas_id');
     }
+
+    /**
+     * The task_users that belong to the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function task_users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'task_user');
+    }
+
+    /**
+     * The task_kelas that belong to the Task
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function task_kelas(): BelongsToMany
+    {
+        return $this->belongsToMany(Kelas::class, 'task_kelas');
+    }
 }

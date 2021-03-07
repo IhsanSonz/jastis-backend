@@ -70,4 +70,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(Task::class, 'user_id');
     }
+
+    /**
+     * The event_user that belong to the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function event_users(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'event_user');
+    }
+
+    /**
+     * The task_users that belong to the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function task_users(): BelongsToMany
+    {
+        return $this->belongsToMany(Task::class, 'task_user');
+    }
 }

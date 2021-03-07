@@ -28,4 +28,24 @@ class Event extends Model
     {
         return $this->belongsTo(Kelas::class, 'kelas_id');
     }
+
+    /**
+     * The event_users that belong to the Event
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function event_users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'event_user');
+    }
+
+    /**
+     * The event_kelas that belong to the Event
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function event_kelas(): BelongsToMany
+    {
+        return $this->belongsToMany(Kelas::class, 'event_kelas');
+    }
 }
