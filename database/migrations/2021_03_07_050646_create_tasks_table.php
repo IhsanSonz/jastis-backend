@@ -19,8 +19,8 @@ class CreateTasksTable extends Migration
             $table->bigInteger('kelas_id')->unsigned();
             $table->string('title');
             $table->text('desc');
-            $table->dateTime('date_start')->default(new DateTime());
-            $table->dateTime('date_end')->nullable();
+            $table->timestamp('date_start');
+            $table->timestamp('date_end')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
