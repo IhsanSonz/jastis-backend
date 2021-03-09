@@ -22,6 +22,7 @@ class TaskSeeder extends Seeder
                 'title' => $faker->sentence,
                 'desc' => $faker->text,
                 'date_end' => $faker->dateTimeBetween('now', '+1 year'),
+                'created_at' => \Carbon\Carbon::now(),
             ]);
         }
     }

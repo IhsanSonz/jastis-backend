@@ -14,7 +14,7 @@ class Task extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function users(): BelongsTo
+    public function users()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -24,7 +24,7 @@ class Task extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function kelas(): BelongsTo
+    public function kelas()
     {
         return $this->belongsTo(Kelas::class, 'kelas_id');
     }
@@ -34,9 +34,11 @@ class Task extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function task_users(): BelongsToMany
+    public function task_users()
     {
-        return $this->belongsToMany(User::class, 'task_user');
+        return $this->belongsToMany(User::class, 'task_user')
+    	->withPivot('data')
+    	->withTimestamps();
     }
 
     /**
@@ -44,8 +46,8 @@ class Task extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function task_kelas(): BelongsToMany
+    public function task_kelas()
     {
-        return $this->belongsToMany(Kelas::class, 'task_kelas');
+        return $this->belongsToMany(Kelas::class, 'task_kelas')->withTimestamps();
     }
 }

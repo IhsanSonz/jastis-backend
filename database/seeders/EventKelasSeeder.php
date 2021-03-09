@@ -17,6 +17,7 @@ class EventKelasSeeder extends Seeder
             \DB::table('event_kelas')->insert([
                 'kelas_id' => $i,
                 'event_id' => $i,
+                'created_at' => \Carbon\Carbon::now(),
             ]);
         }
     }

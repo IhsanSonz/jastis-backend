@@ -8,15 +8,27 @@ use Illuminate\Database\Eloquent\Model;
 class Kelas extends Model
 {
     use HasFactory;
+    
+    /**
+     * Get the users that owns the Kelas
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     /**
      * The users that belong to the Kelas
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function users(): BelongsToMany
+    public function kelas_users()
     {
-        return $this->belongsToMany(User::class, 'user_kelas');
+        return $this->belongsToMany(User::class)
+    	->withPivot('role')
+    	->withTimestamps();
     }
 
     /**
@@ -24,9 +36,9 @@ class Kelas extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function event_kelas(): BelongsToMany
+    public function event_kelas()
     {
-        return $this->belongsToMany(Event::class, 'event_kelas');
+        return $this->belongsToMany(Event::class, 'event_kelas')->withTimestamps();
     }
 
     /**
@@ -34,8 +46,8 @@ class Kelas extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function task_kelas(): BelongsToMany
+    public function task_kelas()
     {
-        return $this->belongsToMany(Task::class, 'task_user');
+        return $this->belongsToMany(Task::class, 'task_kelas')->withTimestamps();
     }
 }

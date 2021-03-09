@@ -17,6 +17,7 @@ class KelasSeeder extends Seeder
             \DB::table('kelas')->insert([
                 'user_id' => 2,
                 'name' => 'TKI-' . $i,
+                'created_at' => \Carbon\Carbon::now(),
             ]);
         }
     }

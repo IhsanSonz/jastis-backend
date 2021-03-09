@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
                 'email_verified_at'=> now(),
                 'password'=> bcrypt("admin"),
                 'remember_token' => \Str::random(10),
+                'created_at' => \Carbon\Carbon::now(),
             ],
             [
                 'name' => 'guru',
@@ -27,6 +28,7 @@ class UserSeeder extends Seeder
                 'email_verified_at'=> now(),
                 'password'=> bcrypt("guru"),
                 'remember_token' => \Str::random(10),
+                'created_at' => \Carbon\Carbon::now(),
             ]
         ]);
 
@@ -37,6 +39,7 @@ class UserSeeder extends Seeder
                 'email_verified_at'=> now(),
                 'password'=> bcrypt("murid" . $i),
                 'remember_token' => \Str::random(10),
+                'created_at' => \Carbon\Carbon::now(),
             ]);
         }
     }

@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 
-class UserKelasSeeder extends Seeder
+class KelasUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,9 +16,10 @@ class UserKelasSeeder extends Seeder
     {
         $j = 1;
         for ($i=3; $i <= 7; $i++) {
-            \DB::table('user_kelas')->insert([
+            \DB::table('kelas_user')->insert([
                 'user_id' => $i,
                 'kelas_id' => $j,
+                'created_at' => \Carbon\Carbon::now(),
             ]);
 
             $j++;

@@ -22,6 +22,7 @@ class EventUserSeeder extends Seeder
                 'user_id' => $i,
                 'event_id' => $j,
                 'data' => $faker->text,
+                'created_at' => \Carbon\Carbon::now(),
             ]);
 
             $j++;

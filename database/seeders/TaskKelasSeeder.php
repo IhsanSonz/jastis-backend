@@ -17,6 +17,7 @@ class TaskKelasSeeder extends Seeder
             \DB::table('task_kelas')->insert([
                 'kelas_id' => $i,
                 'task_id' => $i,
+                'created_at' => \Carbon\Carbon::now(),
             ]);
         }
     }

@@ -22,6 +22,7 @@ class TaskUserSeeder extends Seeder
                 'user_id' => $i,
                 'task_id' => $j,
                 'data' => $faker->text,
+                'created_at' => \Carbon\Carbon::now(),
             ]);
 
             $j++;

@@ -14,7 +14,7 @@ class Event extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function users(): BelongsTo
+    public function users()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -24,7 +24,7 @@ class Event extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function kelas(): BelongsTo
+    public function kelas()
     {
         return $this->belongsTo(Kelas::class, 'kelas_id');
     }
@@ -34,9 +34,11 @@ class Event extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function event_users(): BelongsToMany
+    public function event_users()
     {
-        return $this->belongsToMany(User::class, 'event_user');
+        return $this->belongsToMany(User::class, 'event_user')
+    	->withPivot('data')
+    	->withTimestamps();
     }
 
     /**
@@ -44,8 +46,8 @@ class Event extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function event_kelas(): BelongsToMany
+    public function event_kelas()
     {
-        return $this->belongsToMany(Kelas::class, 'event_kelas');
+        return $this->belongsToMany(Kelas::class, 'event_kelas')->withTimestamps();
     }
 }

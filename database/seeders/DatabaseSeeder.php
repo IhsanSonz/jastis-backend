@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             KelasSeeder::class,
             TaskSeeder::class,
             EventSeeder::class,
-            UserKelasSeeder::class,
+            KelasUserSeeder::class,
             TaskKelasSeeder::class,
             EventKelasSeeder::class,
             TaskUserSeeder::class,

@@ -14,17 +14,7 @@ class KelasController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Kelas::latest()->get();
     }
 
     /**
@@ -35,51 +25,80 @@ class KelasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $kelas = new Kelas;
+        $kelas->user_id = $request->user_id;
+        $kelas->name = $request->name;
+        $kelas->save();
+
+        $kelas->kelas_users()->attach([$request->user_id => ['role'=>'guru']]);
+
+        return response()->json([
+            'data' => $kelas,
+            'message' => 'Data berhasil masuk'
+        ], 200);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Kelas  $kelas
      * @return \Illuminate\Http\Response
      */
-    public function show(Kelas $kelas)
+    public function show($id)
     {
-        //
+        return Kelas::find($id);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Display the specified resource.
      *
-     * @param  \App\Models\Kelas  $kelas
      * @return \Illuminate\Http\Response
      */
-    public function edit(Kelas $kelas)
+    public function getOwner($id)
     {
-        //
+        return Kelas::find($id)->users;
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getAnggota($id)
+    {
+        return Kelas::find($id)->kelas_users;
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Kelas  $kelas
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Kelas $kelas)
+    public function update(Request $request, $id)
     {
-        //
+        $kelas = Kelas::find($id);
+        $kelas->user_id = $request->user_id;
+        $kelas->name = $request->name;
+        $kelas->save();
+
+        $kelas->kelas_users()->sync([$request->user_id => ['role'=>'guru']]);
+
+        return response()->json([
+            'data' => $kelas,
+            'message' => 'Data berhasil diubah'
+        ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Kelas  $kelas
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Kelas $kelas)
+    public function destroy($id)
     {
-        //
+        $kelas = Kelas::find($id);
+        $kelas->delete();
+
+        return response()->json(['message' => 'Data berhasil dihapus'], 200);
     }
 }

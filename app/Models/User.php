@@ -63,13 +63,25 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Get all of the kelas for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function kelas()
+    {
+        return $this->hasMany(Kelas::class, 'user_id');
+    }
+
+    /**
      * The kelas that belong to the User
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function kelas(): BelongsToMany
+    public function kelas_users()
     {
-        return $this->belongsToMany(Kelas::class, 'user_kelas')->withTimestamps();
+        return $this->belongsToMany(Kelas::class)
+    	->withPivot('role')
+    	->withTimestamps();
     }
 
     /**
@@ -77,7 +89,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function events(): HasMany
+    public function events()
     {
         return $this->hasMany(Event::class, 'user_id');
     }
@@ -87,7 +99,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function tasks(): HasMany
+    public function tasks()
     {
         return $this->hasMany(Task::class, 'user_id');
     }
@@ -97,9 +109,11 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function event_users(): BelongsToMany
+    public function event_users()
     {
-        return $this->belongsToMany(Event::class, 'event_user');
+        return $this->belongsToMany(Event::class, 'event_user')
+    	->withPivot('data')
+    	->withTimestamps();
     }
 
     /**
@@ -107,8 +121,10 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function task_users(): BelongsToMany
+    public function task_users()
     {
-        return $this->belongsToMany(Task::class, 'task_user');
+        return $this->belongsToMany(Task::class, 'task_user')
+    	->withPivot('data')
+    	->withTimestamps();
     }
 }

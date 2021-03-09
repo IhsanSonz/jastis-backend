@@ -14,17 +14,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Task::latest()->get();
     }
 
     /**
@@ -35,51 +25,84 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $date_start = new \DateTime($request->date_start);
+        $date_start->setTimeZone(new \DateTimeZone(config('app.timezone')));
+        $date_start->format('YYYY-MM-DD hh:mm:ss');
+
+        $date_end = new \DateTime($request->date_end);
+        $date_end->setTimeZone(new \DateTimeZone(config('app.timezone')));
+        $date_end->format('YYYY-MM-DD hh:mm:ss');
+
+        $task = new Task;
+        $task->user_id = $request->user_id;
+        $task->title = $request->title;
+        $task->desc = $request->desc;
+        $task->date_start = $date_start;
+        $task->date_end = $date_end;
+        $task->save();
+
+        $kelasId = collect($request->kelas_id);
+        $task->task_kelas()->attach($kelasId);
+
+        return response()->json([
+            'data' => $task,
+            'message' => 'Data berhasil masuk'
+        ], 200);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function show(Task $task)
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Task $task)
-    {
-        //
+        return Task::find($id);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, $id)
     {
-        //
+        $date_start = new \DateTime($request->date_start);
+        $date_start->setTimeZone(new \DateTimeZone(config('app.timezone')));
+        $date_start->format('YYYY-MM-DD hh:mm:ss');
+
+        $date_end = new \DateTime($request->date_end);
+        $date_end->setTimeZone(new \DateTimeZone(config('app.timezone')));
+        $date_end->format('YYYY-MM-DD hh:mm:ss');
+
+        $task = Task::find($id);
+        $task->user_id = $request->user_id;
+        $task->title = $request->title;
+        $task->desc = $request->desc;
+        $task->date_start = $date_start;
+        $task->date_end = $date_end;
+        $task->save();
+
+        $kelasId = collect($request->kelas_id);
+        $task->task_kelas()->sync($kelasId);
+
+        return response()->json([
+            'data' => $task,
+            'message' => 'Data berhasil diubah'
+        ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
+    public function destroy($id)
     {
-        //
+        $task = Task::find($id);
+        $task->delete();
+
+        return response()->json(['message' => 'Data berhasil dihapus'], 200);
     }
 }
