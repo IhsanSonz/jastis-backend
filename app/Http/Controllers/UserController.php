@@ -40,6 +40,36 @@ class UserController extends Controller
     }
 
     /**
+     * Display the related resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getTask($id)
+    {
+        return User::find($id)->tasks;
+    }
+
+    /**
+     * Display the related resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getSentTask($id)
+    {
+        return User::find($id)->task_users;
+    }
+
+    /**
+     * Display the related resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getSentEvent($id)
+    {
+        return User::find($id)->event_users;
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
