@@ -32,7 +32,11 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('user/{id}/kelas', [UserController::class, 'getKelas']);
     Route::get('user/{id}/task', [UserController::class, 'getTask']);
     Route::get('user/{id}/sent_task', [UserController::class, 'getSentTask']);
+    Route::post('user/{id}/sent_task', [UserController::class, 'sendTask']);
+    Route::put('user/{id}/sent_task', [UserController::class, 'updateTask']);
     Route::get('user/{id}/sent_event', [UserController::class, 'getSentEvent']);
+    Route::post('user/{id}/sent_event', [UserController::class, 'sendEvent']);
+    Route::put('user/{id}/sent_event', [UserController::class, 'updateEvent']);
     Route::put('user/{id}', [UserController::class, 'update']);
     Route::delete('user/{id}', [UserController::class, 'delete']);
     

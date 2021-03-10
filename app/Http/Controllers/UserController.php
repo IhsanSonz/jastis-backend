@@ -48,7 +48,6 @@ class UserController extends Controller
     {
         return User::find($id)->tasks;
     }
-
     /**
      * Display the related resource.
      *
@@ -64,9 +63,101 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function sendTask(Request $request, $id)
+    {
+        $task_id = $request->task_id;
+        $data = collect($request->data);
+        $user = User::find($id);
+
+        foreach ($data as $link) {
+            $user->task_users()->attach([$task_id => ['data'=> $link]]);
+        }
+
+        return response()->json([
+            'data' => $user->task_users()->wherePivot('task_id', $task_id)->get(),
+            'message' => 'Data berhasil masuk'
+        ], 200);
+    }
+
+    /**
+     * Display the related resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateTask(Request $request, $id)
+    {
+        $task_id = $request->task_id;
+        $data = collect($request->data);
+        $user = User::find($id);
+
+        $user->task_users()->wherePivot('task_id', $task_id)->wherePivotIn('data', $data, 'and', true)->detach();
+
+        foreach ($data as $link) {
+            if (empty($user->task_users()->wherePivot('task_id', $task_id)->wherePivot('data', $link)->get())) {
+                $user->task_users()->attach([$task_id => ['data'=> $link]]);
+            }
+        }
+
+        return response()->json([
+            'data' => $user->task_users()->wherePivot('task_id', $task_id)->get(),
+            'message' => 'Data berhasil dihapus'
+        ], 200);
+    }
+
+    /**
+     * Display the related resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getSentEvent($id)
     {
         return User::find($id)->event_users;
+    }
+
+    /**
+     * Display the related resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function sendEvent(Request $request, $id)
+    {
+        $event_id = $request->event_id;
+        $data = collect($request->data);
+        $user = User::find($id);
+
+        foreach ($data as $link) {
+            $user->event_users()->attach([$event_id => ['data'=> $link]]);
+        }
+
+        return response()->json([
+            'data' => $user->event_users()->wherePivot('event_id', $event_id)->get(),
+            'message' => 'Data berhasil masuk'
+        ], 200);
+    }
+
+    /**
+     * Display the related resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateEvent(Request $request, $id)
+    {
+        $event_id = $request->event_id;
+        $data = collect($request->data);
+        $user = User::find($id);
+
+        $user->event_users()->wherePivot('event_id', $event_id)->wherePivotIn('data', $data, 'and', true)->detach();
+
+        foreach ($data as $link) {
+            if (empty($user->event_users()->wherePivot('event_id', $event_id)->wherePivot('data', $link)->get())) {
+                $user->event_users()->attach([$event_id => ['data'=> $link]]);
+            }
+        }
+
+        return response()->json([
+            'data' => $user->event_users()->wherePivot('event_id', $event_id)->get(),
+            'message' => 'Data berhasil dihapus'
+        ], 200);
     }
 
     /**
