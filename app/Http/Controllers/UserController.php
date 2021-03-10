@@ -93,7 +93,7 @@ class UserController extends Controller
         $user->task_users()->wherePivot('task_id', $task_id)->wherePivotIn('data', $data, 'and', true)->detach();
 
         foreach ($data as $link) {
-            if (empty($user->task_users()->wherePivot('task_id', $task_id)->wherePivot('data', $link)->get())) {
+            if ($user->task_users()->wherePivot('task_id', $task_id)->wherePivot('data', $link)->get()->isEmpty()) {
                 $user->task_users()->attach([$task_id => ['data'=> $link]]);
             }
         }
@@ -149,7 +149,7 @@ class UserController extends Controller
         $user->event_users()->wherePivot('event_id', $event_id)->wherePivotIn('data', $data, 'and', true)->detach();
 
         foreach ($data as $link) {
-            if (empty($user->event_users()->wherePivot('event_id', $event_id)->wherePivot('data', $link)->get())) {
+            if ($user->event_users()->wherePivot('event_id', $event_id)->wherePivot('data', $link)->get()->isEmpty()) {
                 $user->event_users()->attach([$event_id => ['data'=> $link]]);
             }
         }
