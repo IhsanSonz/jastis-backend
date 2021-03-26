@@ -105,6 +105,26 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Get all of the task_comments for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function task_comments()
+    {
+        return $this->hasMany(TaskComment::class, 'user_id');
+    }
+
+    /**
+     * Get all of the event_comments for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function event_comments()
+    {
+        return $this->hasMany(EventComment::class, 'user_id');
+    }
+
+    /**
      * The event_user that belong to the User
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

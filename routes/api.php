@@ -7,6 +7,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventCommentController;
+use App\Http\Controllers\TaskCommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,12 +36,13 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('user/{id}/sent_task', [UserController::class, 'getSentTask']);
     Route::post('user/{id}/sent_task', [UserController::class, 'sendTask']);
     Route::put('user/{id}/sent_task', [UserController::class, 'updateTask']);
+    Route::get('user/{id}/event', [UserController::class, 'getEvent']);
     Route::get('user/{id}/sent_event', [UserController::class, 'getSentEvent']);
     Route::post('user/{id}/sent_event', [UserController::class, 'sendEvent']);
     Route::put('user/{id}/sent_event', [UserController::class, 'updateEvent']);
     Route::put('user/{id}', [UserController::class, 'update']);
     Route::delete('user/{id}', [UserController::class, 'delete']);
-    
+
     Route::get('kelas', [KelasController::class, 'index']);
     Route::get('kelas/{id}', [KelasController::class, 'show']);
     Route::get('kelas/{id}/owner', [KelasController::class, 'getOwner']);
@@ -47,7 +50,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('kelas', [KelasController::class, 'store']);
     Route::put('kelas/{id}', [KelasController::class, 'update']);
     Route::delete('kelas/{id}', [KelasController::class, 'destroy']);
-    
+
     Route::get('task', [TaskController::class, 'index']);
     Route::get('task/{id}', [TaskController::class, 'show']);
     Route::get('task/{id}/owner', [TaskController::class, 'getOwner']);
@@ -55,7 +58,7 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('task', [TaskController::class, 'store']);
     Route::put('task/{id}', [TaskController::class, 'update']);
     Route::delete('task/{id}', [TaskController::class, 'destroy']);
-    
+
     Route::get('event', [EventController::class, 'index']);
     Route::get('event/{id}', [EventController::class, 'show']);
     Route::get('event/{id}/owner', [EventController::class, 'getOwner']);
@@ -63,4 +66,20 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('event', [EventController::class, 'store']);
     Route::put('event/{id}', [EventController::class, 'update']);
     Route::delete('event/{id}', [EventController::class, 'destroy']);
+
+    Route::get('event_comment', [EventCommentController::class, 'index']);
+    Route::get('event_comment/{id}', [EventCommentController::class, 'show']);
+    Route::get('event_comment/{id}/user', [EventCommentController::class, 'getUser']);
+    Route::get('event_comment/{id}/event', [EventCommentController::class, 'getEvent']);
+    Route::post('event_comment', [EventCommentController::class, 'store']);
+    Route::put('event_comment/{id}', [EventCommentController::class, 'update']);
+    Route::delete('event_comment/{id}', [EventCommentController::class, 'destroy']);
+
+    Route::get('task_comment', [TaskCommentController::class, 'index']);
+    Route::get('task_comment/{id}', [TaskCommentController::class, 'show']);
+    Route::get('task_comment/{id}/user', [TaskCommentController::class, 'getUser']);
+    Route::get('task_comment/{id}/task', [TaskCommentController::class, 'getTask']);
+    Route::post('task_comment', [TaskCommentController::class, 'store']);
+    Route::put('task_comment/{id}', [TaskCommentController::class, 'update']);
+    Route::delete('task_comment/{id}', [TaskCommentController::class, 'destroy']);
 });

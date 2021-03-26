@@ -20,13 +20,13 @@ class Event extends Model
     }
 
     /**
-     * Get the kelas that owns the Event
+     * Get all of the event_comments for the Event
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function kelas()
+    public function event_comments()
     {
-        return $this->belongsTo(Kelas::class, 'kelas_id');
+        return $this->hasMany(EventComment::class, 'event_id');
     }
 
     /**

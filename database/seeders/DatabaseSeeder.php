@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             EventKelasSeeder::class,
             TaskUserSeeder::class,
             EventUserSeeder::class,
+            EventCommentSeeder::class,
+            TaskCommentSeeder::class,
         ]);
     }
 }

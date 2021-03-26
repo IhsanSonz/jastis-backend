@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kelas;
+use App\Models\TaskComment;
 use Illuminate\Http\Request;
 
-class KelasController extends Controller
+class TaskCommentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class KelasController extends Controller
      */
     public function index()
     {
-        return Kelas::with('users')->with('kelas_users')->latest()->get();
+        return TaskComment::with('users')->with('tasks')->latest()->get();
     }
 
     /**
@@ -25,15 +25,14 @@ class KelasController extends Controller
      */
     public function store(Request $request)
     {
-        $kelas = new Kelas;
-        $kelas->user_id = $request->user_id;
-        $kelas->name = $request->name;
-        $kelas->save();
-
-        $kelas->kelas_users()->attach([$request->user_id => ['role'=>'guru']]);
+        $comment = new TaskComment;
+        $comment->user_id = $request->user_id;
+        $comment->task_id = $request->task_id;
+        $comment->data = $request->data;
+        $comment->save();
 
         return response()->json([
-            'data' => $kelas,
+            'data' => $comment,
             'message' => 'Data berhasil masuk'
         ], 200);
     }
@@ -45,7 +44,7 @@ class KelasController extends Controller
      */
     public function show($id)
     {
-        return Kelas::find($id);
+        return TaskComment::with('users')->with('tasks')->find($id);
     }
 
     /**
@@ -53,9 +52,9 @@ class KelasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getOwner($id)
+    public function getUser($id)
     {
-        return Kelas::find($id)->users;
+        return TaskComment::find($id)->users;
     }
 
     /**
@@ -63,9 +62,9 @@ class KelasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getAnggota($id)
+    public function getTask($id)
     {
-        return Kelas::find($id)->kelas_users;
+        return TaskComment::find($id)->tasks;
     }
 
     /**
@@ -76,15 +75,14 @@ class KelasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $kelas = Kelas::find($id);
-        $kelas->user_id = $request->user_id;
-        $kelas->name = $request->name;
-        $kelas->save();
-
-        $kelas->kelas_users()->sync([$request->user_id => ['role'=>'guru']]);
+        $comment = TaskComment::find($id);
+        $comment->user_id = $request->user_id;
+        $comment->task_id = $request->task_id;
+        $comment->data = $request->data;
+        $comment->save();
 
         return response()->json([
-            'data' => $kelas,
+            'data' => $comment,
             'message' => 'Data berhasil diubah'
         ], 200);
     }
@@ -96,8 +94,8 @@ class KelasController extends Controller
      */
     public function destroy($id)
     {
-        $kelas = Kelas::find($id);
-        $kelas->delete();
+        $comment = TaskComment::find($id);
+        $comment->delete();
 
         return response()->json(['message' => 'Data berhasil dihapus'], 200);
     }

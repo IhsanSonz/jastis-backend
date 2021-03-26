@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
 
-class TaskSeeder extends Seeder
+class EventCommentSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,12 +16,13 @@ class TaskSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        for ($i=0; $i < 5; $i++) { 
-            \DB::table('tasks')->insert([
-                'user_id' => 2,
-                'title' => $faker->sentence,
-                'desc' => $faker->text,
+        for ($i=1; $i <= 5; $i++) { 
+            \DB::table('event_comments')->insert([
+                'user_id' => $i + 2,
+                'event_id' => $i,
+                'data' => $faker->sentence(10, true),
                 'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now(),
             ]);
         }
     }

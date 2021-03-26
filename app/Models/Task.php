@@ -20,13 +20,13 @@ class Task extends Model
     }
 
     /**
-     * Get the kelas that owns the Task
+     * Get all of the task_comments for the Task
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function kelas()
+    public function task_comments()
     {
-        return $this->belongsTo(Kelas::class, 'kelas_id');
+        return $this->hasMany(TaskComment::class, 'task_id');
     }
 
     /**

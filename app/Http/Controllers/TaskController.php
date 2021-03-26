@@ -14,7 +14,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return Task::latest()->get();
+        return Task::with('task_kelas')->with('kelas')->latest()->get();
     }
 
     /**
@@ -26,11 +26,9 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $date_start = new \DateTime($request->date_start);
-        $date_start->setTimeZone(new \DateTimeZone(config('app.timezone')));
         $date_start->format('YYYY-MM-DD hh:mm:ss');
 
         $date_end = new \DateTime($request->date_end);
-        $date_end->setTimeZone(new \DateTimeZone(config('app.timezone')));
         $date_end->format('YYYY-MM-DD hh:mm:ss');
 
         $task = new Task;
@@ -89,11 +87,9 @@ class TaskController extends Controller
     public function update(Request $request, $id)
     {
         $date_start = new \DateTime($request->date_start);
-        $date_start->setTimeZone(new \DateTimeZone(config('app.timezone')));
         $date_start->format('YYYY-MM-DD hh:mm:ss');
 
         $date_end = new \DateTime($request->date_end);
-        $date_end->setTimeZone(new \DateTimeZone(config('app.timezone')));
         $date_end->format('YYYY-MM-DD hh:mm:ss');
 
         $task = Task::find($id);

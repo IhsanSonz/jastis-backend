@@ -35,7 +35,7 @@ class UserController extends Controller
     public function getKelas($id)
     {
         $user = User::find($id);
-        $user->kelas_users;
+        $user->kelas;
         return $user;
     }
 
@@ -48,6 +48,7 @@ class UserController extends Controller
     {
         return User::find($id)->tasks;
     }
+
     /**
      * Display the related resource.
      *
@@ -102,6 +103,16 @@ class UserController extends Controller
             'data' => $user->task_users()->wherePivot('task_id', $task_id)->get(),
             'message' => 'Data berhasil dihapus'
         ], 200);
+    }
+
+    /**
+     * Display the related resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getEvent($id)
+    {
+        return User::find($id)->events;
     }
 
     /**
