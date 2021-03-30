@@ -14,7 +14,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        return Event::with('event_kelas')->with('users')->latest()->get();
+        return Event::with('kelas')->with('users')->latest()->get();
     }
 
     /**
@@ -25,22 +25,12 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $date_start = new \DateTime($request->date_start);
-        $date_start->format('YYYY-MM-DD hh:mm:ss');
-
-        $date_end = new \DateTime($request->date_end);
-        $date_end->format('YYYY-MM-DD hh:mm:ss');
-
         $event = new Event;
         $event->user_id = $request->user_id;
+        $event->kelas_id = $request->kelas_id;
         $event->title = $request->title;
         $event->desc = $request->desc;
-        $event->date_start = $date_start;
-        $event->date_end = $date_end;
         $event->save();
-
-        $kelasId = collect($request->kelas_id);
-        $event->event_kelas()->attach($kelasId);
 
         return response()->json([
             'data' => $event,
@@ -55,7 +45,7 @@ class EventController extends Controller
      */
     public function show($id)
     {
-        return Event::find($id);
+        return Event::with('kelas')->with('users')->find($id);
     }
 
     /**
@@ -75,7 +65,7 @@ class EventController extends Controller
      */
     public function getKelas($id)
     {
-        return Event::find($id)->event_kelas;
+        return Event::find($id)->kelas;
     }
 
     /**
@@ -86,22 +76,12 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $date_start = new \DateTime($request->date_start);
-        $date_start->format('YYYY-MM-DD hh:mm:ss');
-
-        $date_end = new \DateTime($request->date_end);
-        $date_end->format('YYYY-MM-DD hh:mm:ss');
-
         $event = Event::find($id);
         $event->user_id = $request->user_id;
+        $event->kelas_id = $request->kelas_id;
         $event->title = $request->title;
         $event->desc = $request->desc;
-        $event->date_start = $date_start;
-        $event->date_end = $date_end;
         $event->save();
-
-        $kelasId = collect($request->kelas_id);
-        $event->event_kelas()->sync($kelasId);
 
         return response()->json([
             'data' => $event,

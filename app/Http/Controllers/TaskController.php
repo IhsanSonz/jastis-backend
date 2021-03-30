@@ -14,7 +14,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return Task::with('task_kelas')->with('kelas')->latest()->get();
+        return Task::with('kelas')->with('users')->latest()->get();
     }
 
     /**
@@ -25,22 +25,18 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $date_start = new \DateTime($request->date_start);
-        $date_start->format('YYYY-MM-DD hh:mm:ss');
+        $date_start = \Carbon\Carbon::now()->toISOString();
 
-        $date_end = new \DateTime($request->date_end);
-        $date_end->format('YYYY-MM-DD hh:mm:ss');
+        $date_end = \Carbon\Carbon::parse($request->date_end)->toISOString();
 
         $task = new Task;
         $task->user_id = $request->user_id;
+        $task->kelas_id = $request->kelas_id;
         $task->title = $request->title;
         $task->desc = $request->desc;
         $task->date_start = $date_start;
         $task->date_end = $date_end;
         $task->save();
-
-        $kelasId = collect($request->kelas_id);
-        $task->task_kelas()->attach($kelasId);
 
         return response()->json([
             'data' => $task,
@@ -55,7 +51,7 @@ class TaskController extends Controller
      */
     public function show($id)
     {
-        return Task::find($id);
+        return Task::with('kelas')->with('users')->find($id);
     }
 
     /**
@@ -75,7 +71,7 @@ class TaskController extends Controller
      */
     public function getKelas($id)
     {
-        return Task::find($id)->task_kelas;
+        return Task::find($id)->kelas;
     }
 
     /**
@@ -86,22 +82,18 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $date_start = new \DateTime($request->date_start);
-        $date_start->format('YYYY-MM-DD hh:mm:ss');
+        $date_start = \Carbon\Carbon::now()->toISOString();
 
-        $date_end = new \DateTime($request->date_end);
-        $date_end->format('YYYY-MM-DD hh:mm:ss');
+        $date_end = \Carbon\Carbon::parse($request->date_end)->toISOString();
 
         $task = Task::find($id);
         $task->user_id = $request->user_id;
+        $task->kelas_id = $request->kelas_id;
         $task->title = $request->title;
         $task->desc = $request->desc;
         $task->date_start = $date_start;
         $task->date_end = $date_end;
         $task->save();
-
-        $kelasId = collect($request->kelas_id);
-        $task->task_kelas()->sync($kelasId);
 
         return response()->json([
             'data' => $task,

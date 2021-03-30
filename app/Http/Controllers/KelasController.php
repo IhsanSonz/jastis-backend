@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kelas;
+use App\Models\User;
+use App\Models\UserKelas;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
@@ -14,7 +16,7 @@ class KelasController extends Controller
      */
     public function index()
     {
-        return Kelas::with('users')->with('kelas_users')->latest()->get();
+        return Kelas::with('user_kelas')->with('users')->latest()->get();
     }
 
     /**
@@ -30,10 +32,15 @@ class KelasController extends Controller
         $kelas->name = $request->name;
         $kelas->save();
 
-        $kelas->kelas_users()->attach([$request->user_id => ['role'=>'guru']]);
+        $pivot = new UserKelas;
+        $pivot->user_id = $request->user_id;
+        $pivot->kelas_id = $kelas->_id;
+        $pivot->role = 'guru';
+        $pivot->save();
 
         return response()->json([
             'data' => $kelas,
+            'extra' => $pivot,
             'message' => 'Data berhasil masuk'
         ], 200);
     }
@@ -45,7 +52,7 @@ class KelasController extends Controller
      */
     public function show($id)
     {
-        return Kelas::find($id);
+        return Kelas::with('user_kelas')->with('users')->find($id);
     }
 
     /**
@@ -65,7 +72,15 @@ class KelasController extends Controller
      */
     public function getAnggota($id)
     {
-        return Kelas::find($id)->kelas_users;
+        $kelas = Kelas::find($id)->user_kelas;
+
+        foreach ($kelas as $anggota) {
+            $user = User::find($anggota->user_id);
+            $anggota->name = $user->name;
+            $anggota->email = $user->email;
+        }
+        
+        return $kelas;
     }
 
     /**
@@ -81,8 +96,6 @@ class KelasController extends Controller
         $kelas->name = $request->name;
         $kelas->save();
 
-        $kelas->kelas_users()->sync([$request->user_id => ['role'=>'guru']]);
-
         return response()->json([
             'data' => $kelas,
             'message' => 'Data berhasil diubah'
@@ -97,6 +110,7 @@ class KelasController extends Controller
     public function destroy($id)
     {
         $kelas = Kelas::find($id);
+        $kelas->user_kelas()->delete();
         $kelas->delete();
 
         return response()->json(['message' => 'Data berhasil dihapus'], 200);

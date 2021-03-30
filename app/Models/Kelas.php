@@ -3,51 +3,36 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Moloquent;
 
-class Kelas extends Model
+class Kelas extends Moloquent
 {
     use HasFactory;
-    
-    /**
-     * Get the users that owns the Kelas
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+
+    protected $collection = 'kelas';
+
+    protected $fillable = [
+        'user_id',
+        'name',
+    ];
+
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * The users that belong to the Kelas
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function kelas_users()
+    public function user_kelas()
     {
-        return $this->belongsToMany(User::class)
-    	->withPivot('role')
-    	->withTimestamps();
+        return $this->hasMany(UserKelas::class);
     }
 
-    /**
-     * The event_kelas that belong to the Kelas
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function event_kelas()
+    public function tasks()
     {
-        return $this->belongsToMany(Event::class, 'event_kelas')->withTimestamps();
+        return $this->hasMany(Task::class);
     }
 
-    /**
-     * The task_kelas that belong to the Kelas
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function task_kelas()
+    public function events()
     {
-        return $this->belongsToMany(Task::class, 'task_kelas')->withTimestamps();
+        return $this->hasMany(Event::class);
     }
 }

@@ -31,15 +31,15 @@ Route::group(['middleware' => 'auth.jwt'], function () {
 
     Route::get('user', [UserController::class, 'index']);
     Route::get('user/{id}', [UserController::class, 'show']);
+    Route::get('user/{id}/owned', [UserController::class, 'getOwned']);
     Route::get('user/{id}/kelas', [UserController::class, 'getKelas']);
+    Route::post('user/{id}/kelas', [UserController::class, 'connectKelas']);
+    Route::delete('user/{id}/kelas', [UserController::class, 'disconnectKelas']);
     Route::get('user/{id}/task', [UserController::class, 'getTask']);
     Route::get('user/{id}/sent_task', [UserController::class, 'getSentTask']);
     Route::post('user/{id}/sent_task', [UserController::class, 'sendTask']);
     Route::put('user/{id}/sent_task', [UserController::class, 'updateTask']);
     Route::get('user/{id}/event', [UserController::class, 'getEvent']);
-    Route::get('user/{id}/sent_event', [UserController::class, 'getSentEvent']);
-    Route::post('user/{id}/sent_event', [UserController::class, 'sendEvent']);
-    Route::put('user/{id}/sent_event', [UserController::class, 'updateEvent']);
     Route::put('user/{id}', [UserController::class, 'update']);
     Route::delete('user/{id}', [UserController::class, 'delete']);
 
@@ -67,14 +67,6 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::put('event/{id}', [EventController::class, 'update']);
     Route::delete('event/{id}', [EventController::class, 'destroy']);
 
-    Route::get('event_comment', [EventCommentController::class, 'index']);
-    Route::get('event_comment/{id}', [EventCommentController::class, 'show']);
-    Route::get('event_comment/{id}/user', [EventCommentController::class, 'getUser']);
-    Route::get('event_comment/{id}/event', [EventCommentController::class, 'getEvent']);
-    Route::post('event_comment', [EventCommentController::class, 'store']);
-    Route::put('event_comment/{id}', [EventCommentController::class, 'update']);
-    Route::delete('event_comment/{id}', [EventCommentController::class, 'destroy']);
-
     Route::get('task_comment', [TaskCommentController::class, 'index']);
     Route::get('task_comment/{id}', [TaskCommentController::class, 'show']);
     Route::get('task_comment/{id}/user', [TaskCommentController::class, 'getUser']);
@@ -82,4 +74,12 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::post('task_comment', [TaskCommentController::class, 'store']);
     Route::put('task_comment/{id}', [TaskCommentController::class, 'update']);
     Route::delete('task_comment/{id}', [TaskCommentController::class, 'destroy']);
+
+    Route::get('event_comment', [EventCommentController::class, 'index']);
+    Route::get('event_comment/{id}', [EventCommentController::class, 'show']);
+    Route::get('event_comment/{id}/user', [EventCommentController::class, 'getUser']);
+    Route::get('event_comment/{id}/event', [EventCommentController::class, 'getEvent']);
+    Route::post('event_comment', [EventCommentController::class, 'store']);
+    Route::put('event_comment/{id}', [EventCommentController::class, 'update']);
+    Route::delete('event_comment/{id}', [EventCommentController::class, 'destroy']);
 });

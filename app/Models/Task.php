@@ -3,51 +3,43 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Moloquent;
 
-class Task extends Model
+class Task extends Moloquent
 {
     use HasFactory;
 
-    /**
-     * Get the users that owns the Task
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    protected $collection = 'tasks';
+
+    protected $fillable = [
+        'user_id',
+        'kelas_id',
+        'title',
+        'desc',
+    ];
+
+    protected $dates = [
+        'date_start',
+        'date_end',
+    ];
+
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Get all of the task_comments for the Task
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function task_comments()
+    public function kelas()
     {
-        return $this->hasMany(TaskComment::class, 'task_id');
+        return $this->belongsTo(Kelas::class, 'kelas_id');
     }
 
-    /**
-     * The task_users that belong to the Task
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
     public function task_users()
     {
-        return $this->belongsToMany(User::class, 'task_user')
-    	->withPivot('data')
-    	->withTimestamps();
+        return $this->hasMany(TaskUser::class);
     }
 
-    /**
-     * The task_kelas that belong to the Task
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function task_kelas()
+    public function task_comments()
     {
-        return $this->belongsToMany(Kelas::class, 'task_kelas')->withTimestamps();
+        return $this->hasMany(TaskComment::class);
     }
 }

@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Kelas;
+use App\Models\Task;
+use App\Models\UserKelas;
+use App\Models\TaskUser;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -14,7 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::latest()->get();
+        return User::with('user_kelas')->with('kelas')->latest()->get();
     }
 
     /**
@@ -24,7 +28,18 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        return User::find($id);
+        return User::with('user_kelas')->with('kelas')->find($id);
+    }
+
+    /**
+     * Display the related resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getOwned($id)
+    {
+        $user = User::find($id);
+        return $user->kelas;
     }
 
     /**
@@ -34,9 +49,53 @@ class UserController extends Controller
      */
     public function getKelas($id)
     {
-        $user = User::find($id);
-        $user->kelas;
+        $user = User::find($id)->user_kelas;
+        
+        foreach ($user as $pivot) {
+            $kelas = Kelas::find($pivot->kelas_id);
+            $pivot->name = $kelas->name;
+        }
+
         return $user;
+    }
+
+    /**
+     * Display the related resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function connectKelas(Request $request, $id)
+    {
+        $pivot = new UserKelas;
+        $pivot->user_id = $id;
+        $pivot->kelas_id = $request->kelas_id;
+        $pivot->role = 'murid';
+        $pivot->save();
+
+        $pivot->users;
+        $pivot->kelas;
+
+        return response()->json([
+            'data' => $pivot,
+            'message' => 'Data berhasil masuk'
+        ], 200);
+    }
+
+    /**
+     * Display the related resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function disconnectKelas(Request $request, $id)
+    {
+        $pivot = UserKelas::where('user_id', $id)
+                    ->where('kelas_id', $request->kelas_id)
+                    ->where('role', 'murid')
+                    ->first();
+        
+        $pivot->delete();
+
+        return response()->json(['message' => 'Data berhasil dihapus'], 200);
     }
 
     /**
@@ -56,7 +115,15 @@ class UserController extends Controller
      */
     public function getSentTask($id)
     {
-        return User::find($id)->task_users;
+        $user = User::find($id)->task_users;
+        
+        foreach ($user as $pivot) {
+            $task = Task::find($pivot->task_id);
+            $pivot->title = $task->title;
+            $pivot->desc = $task->desc;
+        }
+
+        return $user;
     }
 
     /**
@@ -66,16 +133,15 @@ class UserController extends Controller
      */
     public function sendTask(Request $request, $id)
     {
-        $task_id = $request->task_id;
-        $data = collect($request->data);
-        $user = User::find($id);
-
-        foreach ($data as $link) {
-            $user->task_users()->attach([$task_id => ['data'=> $link]]);
-        }
+        // return $request;
+        $pivot = new TaskUser;
+        $pivot->user_id = $id;
+        $pivot->task_id = $request->task_id;
+        $pivot->data = $request->data;
+        $pivot->save();
 
         return response()->json([
-            'data' => $user->task_users()->wherePivot('task_id', $task_id)->get(),
+            'data' => $pivot,
             'message' => 'Data berhasil masuk'
         ], 200);
     }
@@ -87,21 +153,16 @@ class UserController extends Controller
      */
     public function updateTask(Request $request, $id)
     {
-        $task_id = $request->task_id;
-        $data = collect($request->data);
-        $user = User::find($id);
+        $pivot = TaskUser::where('user_id', $id)
+                    ->where('task_id', $request->task_id)
+                    ->first();
 
-        $user->task_users()->wherePivot('task_id', $task_id)->wherePivotIn('data', $data, 'and', true)->detach();
-
-        foreach ($data as $link) {
-            if ($user->task_users()->wherePivot('task_id', $task_id)->wherePivot('data', $link)->get()->isEmpty()) {
-                $user->task_users()->attach([$task_id => ['data'=> $link]]);
-            }
-        }
+        $pivot->data = $request->data;
+        $pivot->save();
 
         return response()->json([
-            'data' => $user->task_users()->wherePivot('task_id', $task_id)->get(),
-            'message' => 'Data berhasil dihapus'
+            'data' => $pivot,
+            'message' => 'Data berhasil diubah'
         ], 200);
     }
 
@@ -113,62 +174,6 @@ class UserController extends Controller
     public function getEvent($id)
     {
         return User::find($id)->events;
-    }
-
-    /**
-     * Display the related resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getSentEvent($id)
-    {
-        return User::find($id)->event_users;
-    }
-
-    /**
-     * Display the related resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function sendEvent(Request $request, $id)
-    {
-        $event_id = $request->event_id;
-        $data = collect($request->data);
-        $user = User::find($id);
-
-        foreach ($data as $link) {
-            $user->event_users()->attach([$event_id => ['data'=> $link]]);
-        }
-
-        return response()->json([
-            'data' => $user->event_users()->wherePivot('event_id', $event_id)->get(),
-            'message' => 'Data berhasil masuk'
-        ], 200);
-    }
-
-    /**
-     * Display the related resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function updateEvent(Request $request, $id)
-    {
-        $event_id = $request->event_id;
-        $data = collect($request->data);
-        $user = User::find($id);
-
-        $user->event_users()->wherePivot('event_id', $event_id)->wherePivotIn('data', $data, 'and', true)->detach();
-
-        foreach ($data as $link) {
-            if ($user->event_users()->wherePivot('event_id', $event_id)->wherePivot('data', $link)->get()->isEmpty()) {
-                $user->event_users()->attach([$event_id => ['data'=> $link]]);
-            }
-        }
-
-        return response()->json([
-            'data' => $user->event_users()->wherePivot('event_id', $event_id)->get(),
-            'message' => 'Data berhasil dihapus'
-        ], 200);
     }
 
     /**
@@ -199,6 +204,7 @@ class UserController extends Controller
     public function delete($id)
     {
         $user = User::find($id);
+        $user->user_kelas()->delete();
         $user->delete();
 
         return response()->json(['message' => 'Data berhasil dihapus'], 200);

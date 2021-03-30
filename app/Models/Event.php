@@ -3,51 +3,38 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Moloquent;
 
-class Event extends Model
+class Event extends Moloquent
 {
     use HasFactory;
 
-    /**
-     * Get the users that owns the Event
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    protected $collection = 'events';
+
+    protected $fillable = [
+        'user_id',
+        'kelas_id',
+        'title',
+        'desc',
+    ];
+
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Get all of the event_comments for the Event
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function event_comments()
+    public function kelas()
     {
-        return $this->hasMany(EventComment::class, 'event_id');
+        return $this->belongsTo(Kelas::class, 'kelas_id');
     }
 
-    /**
-     * The event_users that belong to the Event
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
     public function event_users()
     {
-        return $this->belongsToMany(User::class, 'event_user')
-    	->withPivot('data')
-    	->withTimestamps();
+        return $this->hasMany(EventUser::class);
     }
 
-    /**
-     * The event_kelas that belong to the Event
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function event_kelas()
+    public function event_comments()
     {
-        return $this->belongsToMany(Kelas::class, 'event_kelas')->withTimestamps();
+        return $this->hasMany(EventComment::class);
     }
 }

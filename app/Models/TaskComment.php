@@ -3,27 +3,25 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Moloquent;
 
-class TaskComment extends Model
+class TaskComment extends Moloquent
 {
     use HasFactory;
 
-    /**
-     * Get the users that owns the TaskComment
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    protected $collection = 'task_comments';
+
+    protected $fillable = [
+        'user_id',
+        'task_id',
+        'data',
+    ];
+
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    /**
-     * Get the tasks that owns the TaskComment
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function tasks()
     {
         return $this->belongsTo(Task::class, 'task_id');

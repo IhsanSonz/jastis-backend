@@ -4,147 +4,75 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Moloquent;
+
+use Jenssegers\Mongodb\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    protected $collection = 'users';
+
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
-     */
     public function getJWTIdentifier()
     {
         return $this->getKey();
     }
 
-    /**
-     * Return a key value array, containing any custom claims to be added to the JWT.
-     *
-     * @return array
-     */
     public function getJWTCustomClaims()
     {
         return [];
     }
 
-    /**
-     * Get all of the kelas for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function kelas()
     {
-        return $this->hasMany(Kelas::class, 'user_id');
+        return $this->hasMany(Kelas::class);
     }
-
-    /**
-     * The kelas that belong to the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function kelas_users()
+    
+    public function user_kelas()
     {
-        return $this->belongsToMany(Kelas::class)
-    	->withPivot('role')
-    	->withTimestamps();
+        return $this->hasMany(UserKelas::class);
     }
 
-    /**
-     * Get all of the events for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function events()
-    {
-        return $this->hasMany(Event::class, 'user_id');
-    }
-
-    /**
-     * Get all of the tasks for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function tasks()
     {
-        return $this->hasMany(Task::class, 'user_id');
+        return $this->hasMany(Task::class);
     }
 
-    /**
-     * Get all of the task_comments for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function task_comments()
-    {
-        return $this->hasMany(TaskComment::class, 'user_id');
-    }
-
-    /**
-     * Get all of the event_comments for the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function event_comments()
-    {
-        return $this->hasMany(EventComment::class, 'user_id');
-    }
-
-    /**
-     * The event_user that belong to the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function event_users()
-    {
-        return $this->belongsToMany(Event::class, 'event_user')
-    	->withPivot('data')
-    	->withTimestamps();
-    }
-
-    /**
-     * The task_users that belong to the User
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
     public function task_users()
     {
-        return $this->belongsToMany(Task::class, 'task_user')
-    	->withPivot('data')
-    	->withTimestamps();
+        return $this->hasMany(TaskUser::class);
+    }
+
+    public function events()
+    {
+        return $this->hasMany(Event::class);
+    }
+
+    public function task_comments()
+    {
+        return $this->hasMany(TaskComment::class);
+    }
+
+    public function event_comments()
+    {
+        return $this->hasMany(EventComment::class);
     }
 }
