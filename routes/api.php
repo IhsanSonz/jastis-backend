@@ -24,7 +24,7 @@ use App\Http\Controllers\TaskCommentController;
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
-Route::group(['middleware' => 'auth.jwt'], function () {
+Route::group(['middleware' => 'jwt.verify'], function () {
 
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('user-info', [AuthController::class, 'getUser']);
