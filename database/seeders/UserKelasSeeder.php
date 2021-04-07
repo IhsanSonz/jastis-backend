@@ -21,7 +21,7 @@ class UserKelasSeeder extends Seeder
 
         \DB::table('user_kelas')->insert([
             'user_id' => $admin->_id,
-            'kelas' => $kelas->_id,
+            'kelas_id' => $kelas->_id,
             'role' => 'guru',
             'created_at' => \Carbon\Carbon::now()->toISOString(),
             'updated_at' => \Carbon\Carbon::now()->toISOString(),
@@ -29,7 +29,7 @@ class UserKelasSeeder extends Seeder
 
         \DB::table('user_kelas')->insert([
             'user_id' => $murid1->_id,
-            'kelas' => $kelas->_id,
+            'kelas_id' => $kelas->_id,
             'role' => 'murid',
             'created_at' => \Carbon\Carbon::now()->toISOString(),
             'updated_at' => \Carbon\Carbon::now()->toISOString(),

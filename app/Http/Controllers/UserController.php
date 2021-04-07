@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
+use App\Models\EventComment;
 use App\Models\Kelas;
 use App\Models\Task;
+use App\Models\TaskComment;
 use App\Models\TaskUser;
 use App\Models\User;
 use App\Models\UserKelas;
@@ -15,6 +18,14 @@ class UserController extends Controller
 {
     public function index()
     {
+        User::truncate();
+        Kelas::truncate();
+        Task::truncate();
+        Event::truncate();
+        UserKelas::truncate();
+        TaskUser::truncate();
+        EventComment::truncate();
+        TaskComment::truncate();
         $user = User::with('user_kelas')->with('kelas')->latest()->get();
 
         return response()->json([
