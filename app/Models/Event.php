@@ -12,8 +12,6 @@ class Event extends Moloquent
     protected $collection = 'events';
 
     protected $fillable = [
-        'user_id',
-        'kelas_id',
         'title',
         'desc',
     ];

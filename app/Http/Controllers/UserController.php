@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Kelas;
 use App\Models\Task;
-use App\Models\UserKelas;
 use App\Models\TaskUser;
+use App\Models\User;
+use App\Models\UserKelas;
 use Illuminate\Http\Request;
+
+// use JWTAuth;
 
 class UserController extends Controller
 {
@@ -19,6 +21,9 @@ class UserController extends Controller
     public function index()
     {
         return User::with('user_kelas')->with('kelas')->latest()->get();
+
+        // $token = JWTAuth::user();
+        // return response()->json(compact('token'));
     }
 
     /**
@@ -50,7 +55,7 @@ class UserController extends Controller
     public function getKelas($id)
     {
         $user = User::find($id)->user_kelas;
-        
+
         foreach ($user as $pivot) {
             $kelas = Kelas::find($pivot->kelas_id);
             $pivot->name = $kelas->name;
@@ -77,7 +82,7 @@ class UserController extends Controller
 
         return response()->json([
             'data' => $pivot,
-            'message' => 'Data berhasil masuk'
+            'message' => 'Data berhasil masuk',
         ], 200);
     }
 
@@ -89,10 +94,10 @@ class UserController extends Controller
     public function disconnectKelas(Request $request, $id)
     {
         $pivot = UserKelas::where('user_id', $id)
-                    ->where('kelas_id', $request->kelas_id)
-                    ->where('role', 'murid')
-                    ->first();
-        
+            ->where('kelas_id', $request->kelas_id)
+            ->where('role', 'murid')
+            ->first();
+
         $pivot->delete();
 
         return response()->json(['message' => 'Data berhasil dihapus'], 200);
@@ -116,7 +121,7 @@ class UserController extends Controller
     public function getSentTask($id)
     {
         $user = User::find($id)->task_users;
-        
+
         foreach ($user as $pivot) {
             $task = Task::find($pivot->task_id);
             $pivot->title = $task->title;
@@ -142,7 +147,7 @@ class UserController extends Controller
 
         return response()->json([
             'data' => $pivot,
-            'message' => 'Data berhasil masuk'
+            'message' => 'Data berhasil masuk',
         ], 200);
     }
 
@@ -154,15 +159,15 @@ class UserController extends Controller
     public function updateTask(Request $request, $id)
     {
         $pivot = TaskUser::where('user_id', $id)
-                    ->where('task_id', $request->task_id)
-                    ->first();
+            ->where('task_id', $request->task_id)
+            ->first();
 
         $pivot->data = $request->data;
         $pivot->save();
 
         return response()->json([
             'data' => $pivot,
-            'message' => 'Data berhasil diubah'
+            'message' => 'Data berhasil diubah',
         ], 200);
     }
 
@@ -192,7 +197,7 @@ class UserController extends Controller
 
         return response()->json([
             'data' => $user,
-            'message' => 'Data berhasil masuk'
+            'message' => 'Data berhasil masuk',
         ], 200);
     }
 

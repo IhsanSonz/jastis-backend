@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use App\Models\Task;
+use App\Models\User;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class TaskUserSeeder extends Seeder
 {
@@ -15,17 +17,15 @@ class TaskUserSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
-        $j = 1;
+        $murid1 = User::where('name', 'murid1')->first();
+        $task = Task::first();
 
-        for ($i=3; $i <= 7; $i++) { 
-            \DB::table('task_user')->insert([
-                'user_id' => $i,
-                'task_id' => $j,
-                'data' => $faker->text,
-                'created_at' => \Carbon\Carbon::now(),
-            ]);
-
-            $j++;
-        }
+        \DB::table('task_user')->insert([
+            'user_id' => $murid1->_id,
+            'task_id' => $task->_id,
+            'data' => $faker->text,
+            'created_at' => \Carbon\Carbon::now(),
+            'updated_at' => \Carbon\Carbon::now(),
+        ]);
     }
 }

@@ -9,6 +9,8 @@ class EventComment extends Moloquent
 {
     use HasFactory;
 
+    protected $fillable = ['data'];
+
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id');

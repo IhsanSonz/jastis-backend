@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use App\Models\Task;
+use App\Models\User;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class TaskCommentSeeder extends Seeder
 {
@@ -15,21 +17,13 @@ class TaskCommentSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
+        $admin = User::where('name', 'admin')->first();
+        $tasks = Task::get();
 
-        for ($i=1; $i <= 5; $i++) { 
+        foreach ($tasks as $task) {
             \DB::table('task_comments')->insert([
-                'user_id' => 2,
-                'task_id' => $i,
-                'data' => 'Tunggu apalagi?',
-                'created_at' => \Carbon\Carbon::now(),
-                'updated_at' => \Carbon\Carbon::now(),
-            ]);
-        }
-
-        for ($i=1; $i <= 5; $i++) { 
-            \DB::table('task_comments')->insert([
-                'user_id' => $i + 2,
-                'task_id' => $i,
+                'user_id' => $admin->_id,
+                'task_id' => $task->_id,
                 'data' => $faker->sentence(10, true),
                 'created_at' => \Carbon\Carbon::now(),
                 'updated_at' => \Carbon\Carbon::now(),

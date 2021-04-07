@@ -12,8 +12,6 @@ class Task extends Moloquent
     protected $collection = 'tasks';
 
     protected $fillable = [
-        'user_id',
-        'kelas_id',
         'title',
         'desc',
     ];

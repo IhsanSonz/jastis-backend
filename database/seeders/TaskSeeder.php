@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
+use App\Models\Kelas;
+use App\Models\User;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class TaskSeeder extends Seeder
 {
@@ -15,13 +17,19 @@ class TaskSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
+        $user = User::where('name', 'admin')->first();
+        $kelas = Kelas::get();
 
-        for ($i=0; $i < 5; $i++) { 
+        foreach ($kelas as $class) {
             \DB::table('tasks')->insert([
-                'user_id' => 2,
+                'user_id' => $user->_id,
+                'kelas_id' => $class->_id,
                 'title' => $faker->sentence,
                 'desc' => $faker->text,
+                'date_start' => \Carbon\Carbon::now(),
+                'date_end' => \Carbon\Carbon::now()->addMonth(),
                 'created_at' => \Carbon\Carbon::now(),
+                'updated_at' => \Carbon\Carbon::now(),
             ]);
         }
     }

@@ -11,11 +11,7 @@ class TaskComment extends Moloquent
 
     protected $collection = 'task_comments';
 
-    protected $fillable = [
-        'user_id',
-        'task_id',
-        'data',
-    ];
+    protected $fillable = ['data'];
 
     public function users()
     {

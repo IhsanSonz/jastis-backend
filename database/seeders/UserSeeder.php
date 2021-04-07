@@ -17,29 +17,32 @@ class UserSeeder extends Seeder
             [
                 'name' => 'admin',
                 'email' => 'admin@gmail.com',
-                'email_verified_at'=> now(),
-                'password'=> bcrypt("admin"),
+                'email_verified_at' => \Carbon\Carbon::now()->toISOString(),
+                'password' => bcrypt("admin"),
                 'remember_token' => \Str::random(10),
-                'created_at' => \Carbon\Carbon::now(),
+                'created_at' => \Carbon\Carbon::now()->toISOString(),
+                'updated_at' => \Carbon\Carbon::now()->toISOString(),
             ],
             [
                 'name' => 'guru',
                 'email' => 'guru@gmail.com',
-                'email_verified_at'=> now(),
-                'password'=> bcrypt("guru"),
+                'email_verified_at' => now()->toISOString(),
+                'password' => bcrypt("guru"),
                 'remember_token' => \Str::random(10),
-                'created_at' => \Carbon\Carbon::now(),
-            ]
+                'created_at' => \Carbon\Carbon::now()->toISOString(),
+                'updated_at' => \Carbon\Carbon::now()->toISOString(),
+            ],
         ]);
 
-        for ($i=1; $i <= 5; $i++) { 
+        for ($i = 1; $i <= 5; $i++) {
             \DB::table('users')->insert([
                 'name' => 'murid' . $i,
                 'email' => 'murid' . $i . '@gmail.com',
-                'email_verified_at'=> now(),
-                'password'=> bcrypt("murid" . $i),
+                'email_verified_at' => now()->toISOString(),
+                'password' => bcrypt("murid" . $i),
                 'remember_token' => \Str::random(10),
-                'created_at' => \Carbon\Carbon::now(),
+                'created_at' => \Carbon\Carbon::now()->toISOString(),
+                'updated_at' => \Carbon\Carbon::now()->toISOString(),
             ]);
         }
     }
