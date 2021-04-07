@@ -7,22 +7,17 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return Event::with('kelas')->with('users')->latest()->get();
+        $events = Event::with('kelas')->with('users')->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $events,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $event = new Event;
@@ -33,47 +28,45 @@ class EventController extends Controller
         $event->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'post data success',
             'data' => $event,
-            'message' => 'Data berhasil masuk'
-        ], 200);
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        return Event::with('kelas')->with('users')->find($id);
+        $event = Event::with('kelas')->with('users')->find($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $event,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getOwner($id)
     {
-        return Event::find($id)->users;
+        $users Event::find($id)->users;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $users,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getKelas($id)
     {
-        return Event::find($id)->kelas;
+        $kelas Event::find($id)->kelas;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $kelas,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $event = Event::find($id);
@@ -84,21 +77,21 @@ class EventController extends Controller
         $event->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'put/patch data success',
             'data' => $event,
-            'message' => 'Data berhasil diubah'
-        ], 200);
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $event = Event::find($id);
         $event->delete();
 
-        return response()->json(['message' => 'Data berhasil dihapus'], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'delete data success',
+            'data' => null,
+        ]);
     }
 }

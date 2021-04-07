@@ -7,22 +7,17 @@ use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return Task::with('kelas')->with('users')->latest()->get();
+        $task = Task::with('kelas')->with('users')->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $task,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $date_start = \Carbon\Carbon::now()->toISOString();
@@ -39,47 +34,56 @@ class TaskController extends Controller
         $task->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'post data success',
             'data' => $task,
-            'message' => 'Data berhasil masuk'
-        ], 200);
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        return Task::with('kelas')->with('users')->find($id);
+        $task = Task::with('kelas')->with('users')->find($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $task,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getOwner($id)
     {
-        return Task::find($id)->users;
+        $users = Task::find($id)->users;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $users,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getKelas($id)
     {
-        return Task::find($id)->kelas;
+        $kelas = Task::find($id)->kelas;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $kelas,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function getSentTask($id)
+    {
+        $kelas = Task::find($id)->task_users;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $kelas,
+        ]);
+    }
+
     public function update(Request $request, $id)
     {
         $date_start = \Carbon\Carbon::now()->toISOString();
@@ -96,21 +100,21 @@ class TaskController extends Controller
         $task->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'put/patch data success',
             'data' => $task,
-            'message' => 'Data berhasil diubah'
-        ], 200);
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $task = Task::find($id);
         $task->delete();
 
-        return response()->json(['message' => 'Data berhasil dihapus'], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'delete data success',
+            'data' => null,
+        ]);
     }
 }

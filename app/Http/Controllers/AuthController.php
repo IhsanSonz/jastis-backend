@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use Validator;
+use Illuminate\Http\Request;
 use JWTAuth;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Validator;
 
 class AuthController extends Controller
 {
@@ -47,7 +47,7 @@ class AuthController extends Controller
     {
         $input = $request->only('email', 'password');
         $token = null;
-        $user = User::where('email', '=', $request->email)->first();
+        $user = User::where('email', '=', $request->email)->with('user_kelas')->with('kelas')->first();
 
         if (!$token = JWTAuth::attempt($input)) {
             return response()->json([
@@ -58,16 +58,16 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            "message"=>'Login Successfully',
+            'message' => 'Login Successfully',
             'token' => $token,
-            "user" => $user,
+            'user' => $user,
         ]);
     }
 
     public function logout(Request $request)
     {
         $this->validate($request, [
-            'token' => 'required'
+            'token' => 'required',
         ]);
 
         try {
@@ -75,12 +75,12 @@ class AuthController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'User logged out successfully'
+                'message' => 'User logged out successfully',
             ]);
         } catch (JWTException $exception) {
             return response()->json([
                 'success' => false,
-                'message' => 'Sorry, the user cannot be logged out'
+                'message' => 'Sorry, the user cannot be logged out',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -89,19 +89,19 @@ class AuthController extends Controller
     {
         try {
 
-            if (! $user = JWTAuth::parseToken()->authenticate()) {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
                 return response()->json(['user_not_found'], 404);
             }
 
-        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $exception) {
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException$exception) {
 
             return response()->json(['token_expired'], $exception->getStatusCode());
 
-        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $exception) {
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException$exception) {
 
             return response()->json(['token_invalid'], $exception->getStatusCode());
 
-        } catch (Tymon\JWTAuth\Exceptions\JWTException $exception) {
+        } catch (Tymon\JWTAuth\Exceptions\JWTException$exception) {
 
             return response()->json(['token_absent'], $exception->getStatusCode());
         }

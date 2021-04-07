@@ -20,12 +20,12 @@ class TaskUserSeeder extends Seeder
         $murid1 = User::where('name', 'murid1')->first();
         $task = Task::first();
 
-        \DB::table('task_user')->insert([
+        \DB::table('task_users')->insert([
             'user_id' => $murid1->_id,
             'task_id' => $task->_id,
             'data' => $faker->text,
-            'created_at' => \Carbon\Carbon::now(),
-            'updated_at' => \Carbon\Carbon::now(),
+            'created_at' => \Carbon\Carbon::now()->toISOString(),
+            'updated_at' => \Carbon\Carbon::now()->toISOString(),
         ]);
     }
 }

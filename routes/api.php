@@ -1,14 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\KelasController;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventCommentController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\KelasController;
 use App\Http\Controllers\TaskCommentController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +18,7 @@ use App\Http\Controllers\TaskCommentController;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "api" middleware group. Enjoy building your API!
 |
-*/
+ */
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
@@ -47,6 +46,8 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('kelas/{id}', [KelasController::class, 'show']);
     Route::get('kelas/{id}/owner', [KelasController::class, 'getOwner']);
     Route::get('kelas/{id}/anggota', [KelasController::class, 'getAnggota']);
+    Route::get('kelas/{id}/task', [KelasController::class, 'getTask']);
+    Route::get('kelas/{id}/event', [KelasController::class, 'getEvent']);
     Route::post('kelas', [KelasController::class, 'store']);
     Route::put('kelas/{id}', [KelasController::class, 'update']);
     Route::delete('kelas/{id}', [KelasController::class, 'destroy']);
@@ -55,6 +56,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('task/{id}', [TaskController::class, 'show']);
     Route::get('task/{id}/owner', [TaskController::class, 'getOwner']);
     Route::get('task/{id}/kelas', [TaskController::class, 'getKelas']);
+    Route::get('task/{id}/sent', [TaskController::class, 'getSentTask']);
     Route::post('task', [TaskController::class, 'store']);
     Route::put('task/{id}', [TaskController::class, 'update']);
     Route::delete('task/{id}', [TaskController::class, 'destroy']);

@@ -13,45 +13,42 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return User::with('user_kelas')->with('kelas')->latest()->get();
+        $user = User::with('user_kelas')->with('kelas')->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $user,
+        ]);
 
         // $token = JWTAuth::user();
         // return response()->json(compact('token'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        return User::with('user_kelas')->with('kelas')->find($id);
+        $user = User::with('user_kelas')->with('kelas')->find($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $user,
+        ]);
     }
 
-    /**
-     * Display the related resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getOwned($id)
     {
         $user = User::find($id);
-        return $user->kelas;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $user->kelas,
+        ]);
     }
 
-    /**
-     * Display the related resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getKelas($id)
     {
         $user = User::find($id)->user_kelas;
@@ -61,14 +58,13 @@ class UserController extends Controller
             $pivot->name = $kelas->name;
         }
 
-        return $user;
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $user,
+        ]);
     }
 
-    /**
-     * Display the related resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function connectKelas(Request $request, $id)
     {
         $pivot = new UserKelas;
@@ -81,16 +77,12 @@ class UserController extends Controller
         $pivot->kelas;
 
         return response()->json([
+            'success' => true,
+            'message' => 'post data success',
             'data' => $pivot,
-            'message' => 'Data berhasil masuk',
-        ], 200);
+        ]);
     }
 
-    /**
-     * Display the related resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function disconnectKelas(Request $request, $id)
     {
         $pivot = UserKelas::where('user_id', $id)
@@ -100,24 +92,24 @@ class UserController extends Controller
 
         $pivot->delete();
 
-        return response()->json(['message' => 'Data berhasil dihapus'], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'delete data success',
+            'data' => null,
+        ]);
     }
 
-    /**
-     * Display the related resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getTask($id)
     {
-        return User::find($id)->tasks;
+        $task = User::find($id)->tasks;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $task,
+        ]);
     }
 
-    /**
-     * Display the related resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getSentTask($id)
     {
         $user = User::find($id)->task_users;
@@ -128,17 +120,15 @@ class UserController extends Controller
             $pivot->desc = $task->desc;
         }
 
-        return $user;
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $user,
+        ]);
     }
 
-    /**
-     * Display the related resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function sendTask(Request $request, $id)
     {
-        // return $request;
         $pivot = new TaskUser;
         $pivot->user_id = $id;
         $pivot->task_id = $request->task_id;
@@ -146,16 +136,12 @@ class UserController extends Controller
         $pivot->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'post data success',
             'data' => $pivot,
-            'message' => 'Data berhasil masuk',
-        ], 200);
+        ]);
     }
 
-    /**
-     * Display the related resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function updateTask(Request $request, $id)
     {
         $pivot = TaskUser::where('user_id', $id)
@@ -166,27 +152,23 @@ class UserController extends Controller
         $pivot->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'put/patch data success',
             'data' => $pivot,
-            'message' => 'Data berhasil diubah',
-        ], 200);
+        ]);
     }
 
-    /**
-     * Display the related resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getEvent($id)
     {
-        return User::find($id)->events;
+        $events = User::find($id)->events;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $events,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $user = User::find($id);
@@ -196,22 +178,22 @@ class UserController extends Controller
         $user->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'put/patch data success',
             'data' => $user,
-            'message' => 'Data berhasil masuk',
-        ], 200);
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function delete($id)
     {
         $user = User::find($id);
         $user->user_kelas()->delete();
         $user->delete();
 
-        return response()->json(['message' => 'Data berhasil dihapus'], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'delete data success',
+            'data' => null,
+        ]);
     }
 }

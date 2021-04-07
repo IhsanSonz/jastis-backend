@@ -9,22 +9,17 @@ use Illuminate\Http\Request;
 
 class KelasController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return Kelas::with('user_kelas')->with('users')->latest()->get();
+        $kelas = Kelas::with('user_kelas')->with('users')->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $kelas,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $kelas = new Kelas;
@@ -39,37 +34,57 @@ class KelasController extends Controller
         $pivot->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'post data success',
             'data' => $kelas,
             'extra' => $pivot,
-            'message' => 'Data berhasil masuk'
-        ], 200);
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        return Kelas::with('user_kelas')->with('users')->find($id);
+        $kelas = Kelas::with('user_kelas')->with('users')->find($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $kelas,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getOwner($id)
     {
-        return Kelas::find($id)->users;
+        $users = Kelas::find($id)->users;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $users,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function getTask($id)
+    {
+        $tasks = Kelas::find($id)->tasks;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $tasks,
+        ]);
+    }
+
+    public function getEvent($id)
+    {
+        $events = Kelas::find($id)->events;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $events,
+        ]);
+    }
+
     public function getAnggota($id)
     {
         $kelas = Kelas::find($id)->user_kelas;
@@ -79,16 +94,14 @@ class KelasController extends Controller
             $anggota->name = $user->name;
             $anggota->email = $user->email;
         }
-        
-        return $kelas;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $kelas,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $kelas = Kelas::find($id);
@@ -97,22 +110,22 @@ class KelasController extends Controller
         $kelas->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'put/patch data success',
             'data' => $kelas,
-            'message' => 'Data berhasil diubah'
-        ], 200);
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $kelas = Kelas::find($id);
         $kelas->user_kelas()->delete();
         $kelas->delete();
 
-        return response()->json(['message' => 'Data berhasil dihapus'], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'delete data success',
+            'data' => null,
+        ]);
     }
 }

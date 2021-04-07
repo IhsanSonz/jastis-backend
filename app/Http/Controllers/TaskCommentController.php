@@ -7,22 +7,17 @@ use Illuminate\Http\Request;
 
 class TaskCommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return TaskComment::with('users')->with('tasks')->latest()->get();
+        $comment = TaskComment::with('users')->with('tasks')->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $comment,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $comment = new TaskComment;
@@ -32,47 +27,45 @@ class TaskCommentController extends Controller
         $comment->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'post data success',
             'data' => $comment,
-            'message' => 'Data berhasil masuk'
-        ], 200);
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        return TaskComment::with('users')->with('tasks')->find($id);
+        $comment = TaskComment::with('users')->with('tasks')->find($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $comment,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getUser($id)
     {
-        return TaskComment::find($id)->users;
+        $users = TaskComment::find($id)->users;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $users,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getTask($id)
     {
-        return TaskComment::find($id)->tasks;
+        $task = TaskComment::find($id)->tasks;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $task,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $comment = TaskComment::find($id);
@@ -82,21 +75,21 @@ class TaskCommentController extends Controller
         $comment->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'put/patch data success',
             'data' => $comment,
-            'message' => 'Data berhasil diubah'
-        ], 200);
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $comment = TaskComment::find($id);
         $comment->delete();
 
-        return response()->json(['message' => 'Data berhasil dihapus'], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'delete data success',
+            'data' => null,
+        ]);
     }
 }

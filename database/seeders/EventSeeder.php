@@ -26,8 +26,8 @@ class EventSeeder extends Seeder
                 'kelas_id' => $class->_id,
                 'title' => $faker->sentence,
                 'desc' => $faker->text,
-                'created_at' => \Carbon\Carbon::now(),
-                'updated_at' => \Carbon\Carbon::now(),
+                'created_at' => \Carbon\Carbon::now()->toISOString(),
+                'updated_at' => \Carbon\Carbon::now()->toISOString(),
             ]);
         }
     }

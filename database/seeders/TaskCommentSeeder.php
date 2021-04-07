@@ -25,8 +25,8 @@ class TaskCommentSeeder extends Seeder
                 'user_id' => $admin->_id,
                 'task_id' => $task->_id,
                 'data' => $faker->sentence(10, true),
-                'created_at' => \Carbon\Carbon::now(),
-                'updated_at' => \Carbon\Carbon::now(),
+                'created_at' => \Carbon\Carbon::now()->toISOString(),
+                'updated_at' => \Carbon\Carbon::now()->toISOString(),
             ]);
         }
     }

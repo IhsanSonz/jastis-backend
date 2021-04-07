@@ -26,11 +26,6 @@ class Event extends Moloquent
         return $this->belongsTo(Kelas::class, 'kelas_id');
     }
 
-    public function event_users()
-    {
-        return $this->hasMany(EventUser::class);
-    }
-
     public function event_comments()
     {
         return $this->hasMany(EventComment::class);

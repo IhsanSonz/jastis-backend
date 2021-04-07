@@ -7,22 +7,17 @@ use Illuminate\Http\Request;
 
 class EventCommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        return EventComment::with('users')->with('events')->latest()->get();
+        $comment = EventComment::with('users')->with('events')->latest()->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $comment,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $comment = new EventComment;
@@ -32,47 +27,45 @@ class EventCommentController extends Controller
         $comment->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'post data success',
             'data' => $comment,
-            'message' => 'Data berhasil masuk'
-        ], 200);
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        return EventComment::with('users')->with('events')->find($id);
+        $comment = EventComment::with('users')->with('events')->find($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $comment,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getUser($id)
     {
-        return EventComment::find($id)->users;
+        $users = EventComment::find($id)->users;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $users,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function getEvent($id)
     {
-        return EventComment::find($id)->events;
+        $event = EventComment::find($id)->events;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $event,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $comment = EventComment::find($id);
@@ -82,21 +75,21 @@ class EventCommentController extends Controller
         $comment->save();
 
         return response()->json([
+            'success' => true,
+            'message' => 'put/patch data success',
             'data' => $comment,
-            'message' => 'Data berhasil diubah'
-        ], 200);
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $comment = EventComment::find($id);
         $comment->delete();
 
-        return response()->json(['message' => 'Data berhasil dihapus'], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'delete data success',
+            'data' => null,
+        ]);
     }
 }

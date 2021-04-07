@@ -25,8 +25,8 @@ class EventCommentSeeder extends Seeder
                 'user_id' => $admin->_id,
                 'event_id' => $event->_id,
                 'data' => $faker->sentence(10, true),
-                'created_at' => \Carbon\Carbon::now(),
-                'updated_at' => \Carbon\Carbon::now(),
+                'created_at' => \Carbon\Carbon::now()->toISOString(),
+                'updated_at' => \Carbon\Carbon::now()->toISOString(),
             ]);
         }
     }
