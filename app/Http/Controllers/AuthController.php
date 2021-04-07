@@ -20,7 +20,6 @@ class AuthController extends Controller
                 'name' => 'required',
                 'email' => 'required|email',
                 'password' => 'required',
-                'c_password' => 'required|same:password',
             ]);
 
         if ($validator->fails()) {
@@ -39,6 +38,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'Register Successfully',
             'data' => $user,
         ], Response::HTTP_OK);
     }
@@ -60,7 +60,7 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Login Successfully',
             'token' => $token,
-            'user' => $user,
+            'data' => $user,
         ]);
     }
 
@@ -106,6 +106,11 @@ class AuthController extends Controller
             return response()->json(['token_absent'], $exception->getStatusCode());
         }
 
-        return response()->json(['user' => $user]);
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'token' => $token,
+            'data' => $user,
+        ]);
     }
 }
