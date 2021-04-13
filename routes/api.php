@@ -28,6 +28,9 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('user-info', [AuthController::class, 'getUser']);
 
+    // test drive fcm
+    Route::post('notif', [UserController::class, 'notif']);
+
     Route::get('user', [UserController::class, 'index']);
     Route::get('user/{id}', [UserController::class, 'show']);
     Route::get('user/{id}/owned', [UserController::class, 'getOwned']);

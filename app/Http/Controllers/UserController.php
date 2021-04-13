@@ -2,37 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
-use App\Models\EventComment;
 use App\Models\Kelas;
 use App\Models\Task;
-use App\Models\TaskComment;
 use App\Models\TaskUser;
 use App\Models\User;
 use App\Models\UserKelas;
+use FCM;
 use Illuminate\Http\Request;
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
 
 // use JWTAuth;
 
 class UserController extends Controller
 {
+    // this function is just for test drive
+    public function notif()
+    {
+        // return var_dump(config('fcm.http.sender_id'));
+        $optionBuilder = new OptionsBuilder();
+        $optionBuilder->setTimeToLive(60 * 20);
+
+        $notificationBuilder = new PayloadNotificationBuilder();
+        $notificationBuilder->setTitle('ini judul')
+            ->setBody('lorem ipsum dolor sit amet');
+
+        $notification = $notificationBuilder->build();
+
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['a_data' => 'my_data']);
+
+        $option = $optionBuilder->build();
+        $notification = $notificationBuilder->build();
+        $data = $dataBuilder->build();
+
+        $token = 'dXEia1CfTDWk5ueXPknKpY:APA91bGzRY4YDPFEJETwPszqS2-bWzC2lNTwvUsznNFxmhy7OxIaVGnwx-al8UhtSTcWsfZvjfYLkYJeFwXkv2GbhXYR6oMLTYARd6EQ4cQxqRCIyGbFK6esBWvvLMb92kouC5xc7abr';
+
+        $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
+
+        $success = $downstreamResponse->numberSuccess();
+        $fail = $downstreamResponse->numberFailure();
+        $error = $downstreamResponse->tokensWithError();
+        return response()->json(compact('success', 'fail', 'error'));
+    }
     public function index()
     {
-        User::truncate();
-        Kelas::truncate();
-        Task::truncate();
-        Event::truncate();
-        UserKelas::truncate();
-        TaskUser::truncate();
-        EventComment::truncate();
-        TaskComment::truncate();
-        $user = User::with('user_kelas')->with('kelas')->latest()->get();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'get data success',
-            'data' => $user,
-        ]);
+        return User::with('user_kelas')->with('kelas')->latest()->get();
 
         // $token = JWTAuth::user();
         // return response()->json(compact('token'));
