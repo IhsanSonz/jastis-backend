@@ -28,9 +28,6 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('user-info', [AuthController::class, 'getUser']);
 
-    // test drive fcm
-    Route::post('notif', [UserController::class, 'notif']);
-
     Route::get('user', [UserController::class, 'index']);
     Route::get('user/{id}', [UserController::class, 'show']);
     Route::get('user/{id}/owned', [UserController::class, 'getOwned']);
@@ -87,4 +84,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('event_comment', [EventCommentController::class, 'store']);
     Route::put('event_comment/{id}', [EventCommentController::class, 'update']);
     Route::delete('event_comment/{id}', [EventCommentController::class, 'destroy']);
+
+    // test drive fcm
+    Route::post('notif', [UserController::class, 'notif']);
 });
