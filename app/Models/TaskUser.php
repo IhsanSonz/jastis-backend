@@ -11,7 +11,7 @@ class TaskUser extends Moloquent
 
     protected $collection = 'task_users';
 
-    protected $fillable = ['data'];
+    protected $fillable = ['data', 'score'];
 
     public function tasks()
     {

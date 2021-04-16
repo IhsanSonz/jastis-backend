@@ -24,6 +24,7 @@ class TaskUserSeeder extends Seeder
             'user_id' => $murid1->_id,
             'task_id' => $task->_id,
             'data' => $faker->text,
+            'score' => null,
             'created_at' => \Carbon\Carbon::now()->toISOString(),
             'updated_at' => \Carbon\Carbon::now()->toISOString(),
         ]);

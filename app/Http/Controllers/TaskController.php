@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\TaskUser;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -21,7 +22,6 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $date_start = \Carbon\Carbon::now()->toISOString();
-
         $date_end = \Carbon\Carbon::parse($request->date_end)->toISOString();
 
         $task = new Task;
@@ -84,10 +84,41 @@ class TaskController extends Controller
         ]);
     }
 
+    public function setScore(Request $request, $id)
+    {
+        $pivot = TaskUser::where('task_id', $id)
+            ->where('user_id', $request->user_id)
+            ->first();
+
+        $pivot->score = $request->score;
+        $pivot->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'post data success',
+            'data' => $pivot,
+        ]);
+    }
+
+    public function updateScore(Request $request, $id)
+    {
+        $pivot = TaskUser::where('task_id', $id)
+            ->where('user_id', $request->user_id)
+            ->first();
+
+        $pivot->score = $request->score;
+        $pivot->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'put/patch data success',
+            'data' => $pivot,
+        ]);
+    }
+
     public function update(Request $request, $id)
     {
         $date_start = \Carbon\Carbon::now()->toISOString();
-
         $date_end = \Carbon\Carbon::parse($request->date_end)->toISOString();
 
         $task = Task::find($id);

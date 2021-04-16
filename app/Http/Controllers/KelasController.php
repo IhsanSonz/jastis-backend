@@ -5,13 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\Kelas;
 use App\Models\User;
 use App\Models\UserKelas;
+use Faker\Factory as Faker;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kelas = Kelas::with('user_kelas')->with('users')->latest()->get();
+        if ($request->exists('user_id')) {
+            $user_id = $request->user_id;
+            $teacing = User::find($user_id)->kelas;
+            $joined = User::find($user_id)->user_kelas;
+
+            foreach ($joined as $pivot) {
+                $pivot->kelas = Kelas::find($pivot->kelas_id);
+            }
+
+            $kelas = compact('teacing', 'joined');
+        } else {
+            $kelas = Kelas::with('user_kelas')->with('users')->latest()->get();
+        }
 
         return response()->json([
             'success' => true,
@@ -22,9 +35,15 @@ class KelasController extends Controller
 
     public function store(Request $request)
     {
+        $faker = Faker::create();
+
         $kelas = new Kelas;
         $kelas->user_id = $request->user_id;
         $kelas->name = $request->name;
+        $kelas->subject = $request->subject;
+        $kelas->desc = $request->desc;
+        $kelas->code = \Str::random(5);
+        $kelas->color = ltrim($faker->hexcolor, '#');
         $kelas->save();
 
         $pivot = new UserKelas;
@@ -107,6 +126,8 @@ class KelasController extends Controller
         $kelas = Kelas::find($id);
         $kelas->user_id = $request->user_id;
         $kelas->name = $request->name;
+        $kelas->subject = $request->subject;
+        $kelas->desc = $request->desc;
         $kelas->save();
 
         return response()->json([

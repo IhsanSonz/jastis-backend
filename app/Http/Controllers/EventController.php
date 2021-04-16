@@ -20,11 +20,16 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
+        $date_start = \Carbon\Carbon::now()->toISOString();
+        $date_end = \Carbon\Carbon::parse($request->date_end)->toISOString();
+
         $event = new Event;
         $event->user_id = $request->user_id;
         $event->kelas_id = $request->kelas_id;
         $event->title = $request->title;
         $event->desc = $request->desc;
+        $task->date_start = $date_start;
+        $task->date_end = $date_end;
         $event->save();
 
         return response()->json([
@@ -47,7 +52,7 @@ class EventController extends Controller
 
     public function getOwner($id)
     {
-        $users Event::find($id)->users;
+        $users = Event::find($id)->users;
 
         return response()->json([
             'success' => true,
@@ -58,7 +63,7 @@ class EventController extends Controller
 
     public function getKelas($id)
     {
-        $kelas Event::find($id)->kelas;
+        $kelas = Event::find($id)->kelas;
 
         return response()->json([
             'success' => true,
@@ -69,11 +74,16 @@ class EventController extends Controller
 
     public function update(Request $request, $id)
     {
+        $date_start = \Carbon\Carbon::now()->toISOString();
+        $date_end = \Carbon\Carbon::parse($request->date_end)->toISOString();
+
         $event = Event::find($id);
         $event->user_id = $request->user_id;
         $event->kelas_id = $request->kelas_id;
         $event->title = $request->title;
         $event->desc = $request->desc;
+        $task->date_start = $date_start;
+        $task->date_end = $date_end;
         $event->save();
 
         return response()->json([

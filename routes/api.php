@@ -60,6 +60,8 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('task', [TaskController::class, 'store']);
     Route::put('task/{id}', [TaskController::class, 'update']);
     Route::delete('task/{id}', [TaskController::class, 'destroy']);
+    Route::post('task/{id}/score', [TaskController::class, 'setScore']);
+    Route::put('task/{id}/score', [TaskController::class, 'updateScore']);
 
     Route::get('event', [EventController::class, 'index']);
     Route::get('event/{id}', [EventController::class, 'show']);

@@ -26,6 +26,8 @@ class EventSeeder extends Seeder
                 'kelas_id' => $class->_id,
                 'title' => $faker->sentence,
                 'desc' => $faker->text,
+                'date_start' => \Carbon\Carbon::now()->toISOString(),
+                'date_end' => \Carbon\Carbon::now()->addMonth()->toISOString(),
                 'created_at' => \Carbon\Carbon::now()->toISOString(),
                 'updated_at' => \Carbon\Carbon::now()->toISOString(),
             ]);

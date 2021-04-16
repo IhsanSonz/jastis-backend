@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
+use App\Models\EventComment;
 use App\Models\Kelas;
 use App\Models\Task;
+use App\Models\TaskComment;
 use App\Models\TaskUser;
 use App\Models\User;
 use App\Models\UserKelas;
@@ -37,7 +40,7 @@ class UserController extends Controller
         $notification = $notificationBuilder->build();
         $data = $dataBuilder->build();
 
-        $token = 'dXEia1CfTDWk5ueXPknKpY:APA91bGzRY4YDPFEJETwPszqS2-bWzC2lNTwvUsznNFxmhy7OxIaVGnwx-al8UhtSTcWsfZvjfYLkYJeFwXkv2GbhXYR6oMLTYARd6EQ4cQxqRCIyGbFK6esBWvvLMb92kouC5xc7abr';
+        $token = 'ell1RfyjQ2S023GEaqjSl6:APA91bHGHJNLdGa3zOYt2sV75NtagMxZdNsFopBB0GG4no-5YcAtgK6yY15R50RBoQA6qHO4rpps9XRLWiWUr-KsevV9nwTj44_LhHVF6XFK9wn2AXAqX35uioIFpP5TiN-A9ytRcLSZ';
 
         $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
 
@@ -48,6 +51,15 @@ class UserController extends Controller
     }
     public function index()
     {
+        Kelas::truncate();
+        Task::truncate();
+        Event::truncate();
+        TaskComment::truncate();
+        EventComment::truncate();
+        TaskUser::truncate();
+        User::truncate();
+        UserKelas::truncate();
+
         return User::with('user_kelas')->with('kelas')->latest()->get();
 
         // $token = JWTAuth::user();
@@ -78,7 +90,7 @@ class UserController extends Controller
 
     public function getKelas($id)
     {
-        $user = User::find($id)->user_kelas;
+        $user = User::findOrFail($id)->user_kelas;
 
         foreach ($user as $pivot) {
             $kelas = Kelas::find($pivot->kelas_id);
@@ -94,9 +106,12 @@ class UserController extends Controller
 
     public function connectKelas(Request $request, $id)
     {
+        $code = $request->code;
+        $kelas_id = Kelas::where('code', $code)->firstOrFail()->_id;
+
         $pivot = new UserKelas;
         $pivot->user_id = $id;
-        $pivot->kelas_id = $request->kelas_id;
+        $pivot->kelas_id = $kelas_id;
         $pivot->role = 'murid';
         $pivot->save();
 
@@ -112,8 +127,11 @@ class UserController extends Controller
 
     public function disconnectKelas(Request $request, $id)
     {
+        $code = $request->code;
+        $kelas_id = Kelas::where('code', $code)->firstOrFail()->_id;
+
         $pivot = UserKelas::where('user_id', $id)
-            ->where('kelas_id', $request->kelas_id)
+            ->where('kelas_id', $kelas_id)
             ->where('role', 'murid')
             ->first();
 
@@ -160,6 +178,7 @@ class UserController extends Controller
         $pivot->user_id = $id;
         $pivot->task_id = $request->task_id;
         $pivot->data = $request->data;
+        $pivot->score = null;
         $pivot->save();
 
         return response()->json([

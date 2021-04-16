@@ -16,6 +16,11 @@ class Event extends Moloquent
         'desc',
     ];
 
+    protected $dates = [
+        'date_start',
+        'date_end',
+    ];
+
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id');

@@ -11,7 +11,13 @@ class Kelas extends Moloquent
 
     protected $collection = 'kelas';
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'subject',
+        'desc',
+        'code',
+        'color',
+    ];
 
     public function users()
     {
