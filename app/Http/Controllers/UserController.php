@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
-use App\Models\EventComment;
 use App\Models\Kelas;
 use App\Models\Task;
-use App\Models\TaskComment;
 use App\Models\TaskUser;
 use App\Models\User;
 use App\Models\UserKelas;
@@ -51,15 +48,6 @@ class UserController extends Controller
     }
     public function index()
     {
-        Kelas::truncate();
-        Task::truncate();
-        Event::truncate();
-        TaskComment::truncate();
-        EventComment::truncate();
-        TaskUser::truncate();
-        User::truncate();
-        UserKelas::truncate();
-
         return User::with('user_kelas')->with('kelas')->latest()->get();
 
         // $token = JWTAuth::user();
