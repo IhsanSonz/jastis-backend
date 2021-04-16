@@ -14,14 +14,14 @@ class KelasController extends Controller
     {
         if ($request->exists('user_id')) {
             $user_id = $request->user_id;
-            $teacing = User::find($user_id)->kelas;
+            $teaching = User::find($user_id)->kelas;
             $joined = User::find($user_id)->user_kelas;
 
             foreach ($joined as $pivot) {
                 $pivot->kelas = Kelas::find($pivot->kelas_id);
             }
 
-            $kelas = compact('teacing', 'joined');
+            $kelas = compact('teaching', 'joined');
         } else {
             $kelas = Kelas::with('user_kelas')->with('users')->latest()->get();
         }
