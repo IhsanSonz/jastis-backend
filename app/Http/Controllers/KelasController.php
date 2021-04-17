@@ -12,21 +12,7 @@ class KelasController extends Controller
 {
     public function index(Request $request)
     {
-        if ($request->exists('user_id')) {
-            $user_id = $request->user_id;
-            $teaching = @User::find($user_id)->kelas ?? [];
-            $joined = @User::find($user_id)->user_kelas ?? [];
-
-            if ($joined) {
-                foreach ($joined as $pivot) {
-                    $pivot->kelas = @Kelas::find($pivot->kelas_id);
-                }
-            }
-
-            $kelas = compact('teaching', 'joined');
-        } else {
-            $kelas = Kelas::with('user_kelas')->with('users')->latest()->get();
-        }
+        $kelas = Kelas::with('user_kelas')->with('users')->latest()->get();
 
         return response()->json([
             'success' => true,

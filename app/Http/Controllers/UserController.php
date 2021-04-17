@@ -88,6 +88,7 @@ class UserController extends Controller
         foreach ($user as $pivot) {
             $kelas = Kelas::find($pivot->kelas_id);
             $pivot->name = $kelas->name;
+            $pivot->owner = $kelas->users->name;
         }
 
         return response()->json([
