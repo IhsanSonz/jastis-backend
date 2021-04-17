@@ -87,7 +87,7 @@ class UserController extends Controller
         $kelass = [];
 
         foreach ($user as $pivot) {
-            $kelas = Kelas::find($pivot->kelas_id);
+            $kelas = Kelas::with('users')->find($pivot->kelas_id);
             $kelas->role = $pivot->role;
             array_push($kelass, $kelas);
         }
