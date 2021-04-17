@@ -84,17 +84,18 @@ class UserController extends Controller
     public function getKelas($id)
     {
         $user = User::findOrFail($id)->user_kelas;
+        $kelass = [];
 
         foreach ($user as $pivot) {
             $kelas = Kelas::find($pivot->kelas_id);
-            $pivot->name = $kelas->name;
-            $pivot->owner = $kelas->users->name;
+            $kelas->role = $pivot->role;
+            array_push($kelass, $kelas);
         }
 
         return response()->json([
             'success' => true,
             'message' => 'get data success',
-            'data' => $user,
+            'data' => $kelass,
         ]);
     }
 
