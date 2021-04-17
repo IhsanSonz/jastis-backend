@@ -48,8 +48,13 @@ class UserController extends Controller
     }
     public function index()
     {
-        return User::with('user_kelas')->with('kelas')->latest()->get();
+        $users = User::with('user_kelas')->with('kelas')->latest()->get();
 
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $users,
+        ]);
         // $token = JWTAuth::user();
         // return response()->json(compact('token'));
     }
