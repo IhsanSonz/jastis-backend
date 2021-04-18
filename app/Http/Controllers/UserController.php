@@ -104,6 +104,14 @@ class UserController extends Controller
         $code = $request->code;
         $kelas_id = Kelas::where('code', $code)->firstOrFail()->_id;
 
+        if (UserKelas::where('user_id', $id)->where('kelas_id', $kelas_id)->first()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'data already exist',
+                'data' => null,
+            ]);
+        }
+
         $pivot = new UserKelas;
         $pivot->user_id = $id;
         $pivot->kelas_id = $kelas_id;
