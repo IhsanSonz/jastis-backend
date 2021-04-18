@@ -135,7 +135,6 @@ class UserController extends Controller
 
         $pivot = UserKelas::where('user_id', $id)
             ->where('kelas_id', $kelas_id)
-            ->where('role', 'murid')
             ->first();
 
         $pivot->delete();
