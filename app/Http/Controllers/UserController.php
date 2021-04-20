@@ -148,18 +148,38 @@ class UserController extends Controller
 
     public function getTask($id)
     {
-        $task = User::find($id)->tasks;
+        //$task = User::find($id)->tasks;
+
+        //return response()->json([
+        //    'success' => true,
+        //    'message' => 'get data success',
+        //    'data' => $task,
+        //]);
+        $user = User::findOrFail($id)->tasks;
+        $tasks = [];
+
+        foreach ($user as $pivot) {
+            $task = Task::with('kelas')->find($pivot->id);
+            array_push($tasks, $task);
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'get data success',
-            'data' => $task,
+            'data' => $tasks,
         ]);
+
     }
 
-    public function getSentTask($id)
+    public function getSentTask(Request $request, $id)
     {
         $user = User::find($id)->task_users;
+        if ($request->exists('task_id')) {
+          $task_id = $request->task_id;
+          if ($task_id) {
+              $user = $user->where('task_id', $task_id);
+          }
+        }
 
         foreach ($user as $pivot) {
             $task = Task::find($pivot->task_id);
