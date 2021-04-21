@@ -6,6 +6,7 @@ use App\Models\Kelas;
 use App\Models\User;
 use App\Models\UserKelas;
 use Faker\Factory as Faker;
+use FCMGroup;
 use Illuminate\Http\Request;
 
 class KelasController extends Controller
@@ -25,6 +26,14 @@ class KelasController extends Controller
     {
         $faker = Faker::create();
 
+        $user_token = User::find($request->user_id)->registration_id;
+
+        $tokens = [$user_token];
+        $groupName = $request->name;
+
+        // Save notification key in your database you must use it to send messages or for managing this group
+        $notification_key = FCMGroup::createGroup($groupName, $tokens);
+
         $kelas = new Kelas;
         $kelas->user_id = $request->user_id;
         $kelas->name = $request->name;
@@ -32,6 +41,7 @@ class KelasController extends Controller
         $kelas->desc = $request->desc;
         $kelas->code = \Str::random(5);
         $kelas->color = ltrim($faker->hexcolor, '#');
+        $kelas->notification_key = $notification_key;
         $kelas->save();
 
         $pivot = new UserKelas;

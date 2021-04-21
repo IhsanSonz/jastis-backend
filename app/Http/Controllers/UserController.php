@@ -122,6 +122,12 @@ class UserController extends Controller
         $pivot->users;
         $pivot->kelas;
 
+        $groupName = $pivot->kelas->name;
+        $notificationKey = $pivot->kelas->notification_key;
+        $user_token = [$pivot->users->registration_id];
+
+        $key = FCMGroup::addToGroup($groupName, $notificationKey, $user_token);
+
         return response()->json([
             'success' => true,
             'message' => 'post data success',
@@ -139,6 +145,12 @@ class UserController extends Controller
             ->first();
 
         $pivot->delete();
+
+        $groupName = $pivot->kelas->name;
+        $notificationKey = $pivot->kelas->notification_key;
+        $user_token = [$pivot->users->registration_id];
+
+        $key = FCMGroup::removeFromGroup($groupName, $notificationKey, $user_token);
 
         return response()->json([
             'success' => true,
@@ -264,20 +276,6 @@ class UserController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'post data success',
-            'data' => $user,
-        ]);
-    }
-
-    public function updateRegistration(Request $request, $id)
-    {
-        $user = User::find($id);
-
-        $user->registration_id = $request->registration_id;
-        $user->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'put/patch data success',
             'data' => $user,
         ]);
     }

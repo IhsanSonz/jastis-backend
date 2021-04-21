@@ -31,6 +31,7 @@ class AuthController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
+        $user->registration_id = null;
         $user->save();
 
         if ($this->token) {
