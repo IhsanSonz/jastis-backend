@@ -38,7 +38,7 @@ class TaskController extends Controller
         $task->save();
 
         $notificationBuilder = new PayloadNotificationBuilder();
-        $notificationBuilder->setTitle('New Task')
+        $notificationBuilder->setTitle('New Task ' . $task->kelas->name)
             ->setBody($request->title);
 
         $dataBuilder = new PayloadDataBuilder();
@@ -47,7 +47,7 @@ class TaskController extends Controller
         $notification = $notificationBuilder->build();
         $data = $dataBuilder->build();
 
-        $notificationKey = Kelas::find($request->kelas_id)->notification_key;
+        $notificationKey = $task->kelas->notification_key;
 
         $groupResponse = FCM::sendToGroup($notificationKey, null, $notification, $data);
 

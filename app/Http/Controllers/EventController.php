@@ -37,7 +37,7 @@ class EventController extends Controller
         $event->save();
 
         $notificationBuilder = new PayloadNotificationBuilder();
-        $notificationBuilder->setTitle('New Event')
+        $notificationBuilder->setTitle('New Event ' . $event->kelas->name)
             ->setBody($request->title);
 
         $dataBuilder = new PayloadDataBuilder();
@@ -46,7 +46,7 @@ class EventController extends Controller
         $notification = $notificationBuilder->build();
         $data = $dataBuilder->build();
 
-        $notificationKey = Kelas::find($request->kelas_id)->notification_key;
+        $notificationKey = $event->kelas->notification_key;
 
         $groupResponse = FCM::sendToGroup($notificationKey, null, $notification, $data);
 

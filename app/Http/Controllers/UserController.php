@@ -99,7 +99,7 @@ class UserController extends Controller
 
         $notificationBuilder = new PayloadNotificationBuilder();
         $notificationBuilder->setTitle('Student Activity')
-            ->setBody('A Student joined your class');
+            ->setBody('A Student joined your class ' . $pivot->kelas->name);
 
         $dataBuilder = new PayloadDataBuilder();
         $dataBuilder->addData(['data' => $pivot->users]);
@@ -133,6 +133,8 @@ class UserController extends Controller
             ->where('kelas_id', $kelas_id)
             ->first();
 
+        $kelasName = $pivot->kelas->name;
+
         $pivot->delete();
 
         $groupName = $pivot->kelas->name;
@@ -143,7 +145,7 @@ class UserController extends Controller
 
         $notificationBuilder = new PayloadNotificationBuilder();
         $notificationBuilder->setTitle('Student Activity')
-            ->setBody('A Student left your class');
+            ->setBody('A Student left your class ' . $kelasName);
 
         $notification = $notificationBuilder->build();
 
