@@ -25,11 +25,12 @@ class KelasController extends Controller
     public function store(Request $request)
     {
         $faker = Faker::create();
+        $code = \Str::random(5);
 
         $user_token = User::find($request->user_id)->registration_id;
 
         $tokens = [$user_token];
-        $groupName = $request->name;
+        $groupName = $code;
 
         // Save notification key in your database you must use it to send messages or for managing this group
         $notification_key = FCMGroup::createGroup($groupName, $tokens);
@@ -39,7 +40,7 @@ class KelasController extends Controller
         $kelas->name = $request->name;
         $kelas->subject = $request->subject;
         $kelas->desc = $request->desc;
-        $kelas->code = \Str::random(5);
+        $kelas->code = $code;
         $kelas->color = ltrim($faker->hexcolor, '#');
         $kelas->notification_key = $notification_key;
         $kelas->save();

@@ -33,6 +33,20 @@ class TaskController extends Controller
         $task->date_end = $date_end;
         $task->save();
 
+        $notificationBuilder = new PayloadNotificationBuilder();
+        $notificationBuilder->setTitle('New Task')
+            ->setBody($request->title);
+
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['data' => $task]);
+
+        $notification = $notificationBuilder->build();
+        $data = $dataBuilder->build();
+
+        $notificationKey = Kelas::find($request->kelas_id)->notification_key;
+
+        $groupResponse = FCM::sendToGroup($notificationKey, null, $notification, $data);
+
         return response()->json([
             'success' => true,
             'message' => 'post data success',
@@ -76,7 +90,7 @@ class TaskController extends Controller
     public function getSentTask($id)
     {
         $taskUser = TaskUser::with('users')->where('task_id', $id)->get();
-        
+
         return response()->json([
             'success' => true,
             'message' => 'get data success',

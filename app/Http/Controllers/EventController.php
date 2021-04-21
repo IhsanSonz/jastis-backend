@@ -28,9 +28,23 @@ class EventController extends Controller
         $event->kelas_id = $request->kelas_id;
         $event->title = $request->title;
         $event->desc = $request->desc;
-        $task->date_start = $date_start;
-        $task->date_end = $date_end;
+        $event->date_start = $date_start;
+        $event->date_end = $date_end;
         $event->save();
+
+        $notificationBuilder = new PayloadNotificationBuilder();
+        $notificationBuilder->setTitle('New Event')
+            ->setBody($request->title);
+
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['data' => $event]);
+
+        $notification = $notificationBuilder->build();
+        $data = $dataBuilder->build();
+
+        $notificationKey = Kelas::find($request->kelas_id)->notification_key;
+
+        $groupResponse = FCM::sendToGroup($notificationKey, null, $notification, $data);
 
         return response()->json([
             'success' => true,

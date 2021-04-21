@@ -128,6 +128,26 @@ class UserController extends Controller
 
         $key = FCMGroup::addToGroup($groupName, $notificationKey, $user_token);
 
+        $notificationBuilder = new PayloadNotificationBuilder();
+        $notificationBuilder->setTitle('Student Activity')
+            ->setBody('A Student joined your class');
+
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['data' => $pivot->users]);
+
+        $notification = $notificationBuilder->build();
+        $data = $dataBuilder->build();
+
+        $gurus = UserKelas::with('users')->where('kelas_id', $request->kelas_id)->where('role', 'guru')->get();
+        $tokens = [];
+
+        foreach ($gurus as $guru) {
+            $token = $guru->users->registration_id;
+            array_push($tokens, $token);
+        }
+
+        $downstreamResponse = FCM::sendTo($tokens, null, $notification, $data);
+
         return response()->json([
             'success' => true,
             'message' => 'post data success',
@@ -151,6 +171,22 @@ class UserController extends Controller
         $user_token = [$pivot->users->registration_id];
 
         $key = FCMGroup::removeFromGroup($groupName, $notificationKey, $user_token);
+
+        $notificationBuilder = new PayloadNotificationBuilder();
+        $notificationBuilder->setTitle('Student Activity')
+            ->setBody('A Student left your class');
+
+        $notification = $notificationBuilder->build();
+
+        $gurus = UserKelas::with('users')->where('kelas_id', $request->kelas_id)->where('role', 'guru')->get();
+        $tokens = [];
+
+        foreach ($gurus as $guru) {
+            $token = $guru->users->registration_id;
+            array_push($tokens, $token);
+        }
+
+        $downstreamResponse = FCM::sendTo($tokens, null, $notification, null);
 
         return response()->json([
             'success' => true,
@@ -234,6 +270,29 @@ class UserController extends Controller
         $pivot->score = null;
         $pivot->save();
 
+        $notificationBuilder = new PayloadNotificationBuilder();
+        $notificationBuilder->setTitle('Assignment')
+            ->setBody('A Student Sends an Assignment');
+
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['data' => $pivot]);
+
+        $notification = $notificationBuilder->build();
+        $data = $dataBuilder->build();
+
+        $gurus = UserKelas::with('users')
+            ->where('kelas_id', Task::find($request->task_id)->kelas->_id)
+            ->where('role', 'guru')
+            ->get();
+        $tokens = [];
+
+        foreach ($gurus as $guru) {
+            $token = $guru->users->registration_id;
+            array_push($tokens, $token);
+        }
+
+        $downstreamResponse = FCM::sendTo($tokens, null, $notification, $data);
+
         return response()->json([
             'success' => true,
             'message' => 'post data success',
@@ -247,6 +306,29 @@ class UserController extends Controller
 
         $pivot->data = $request->data;
         $pivot->save();
+
+        $notificationBuilder = new PayloadNotificationBuilder();
+        $notificationBuilder->setTitle('Assignment')
+            ->setBody('A Student Sends an Assignment');
+
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['data' => $pivot]);
+
+        $notification = $notificationBuilder->build();
+        $data = $dataBuilder->build();
+
+        $gurus = UserKelas::with('users')
+            ->where('kelas_id', Task::find($request->task_id)->kelas->_id)
+            ->where('role', 'guru')
+            ->get();
+        $tokens = [];
+
+        foreach ($gurus as $guru) {
+            $token = $guru->users->registration_id;
+            array_push($tokens, $token);
+        }
+
+        $downstreamResponse = FCM::sendTo($tokens, null, $notification, $data);
 
         return response()->json([
             'success' => true,
