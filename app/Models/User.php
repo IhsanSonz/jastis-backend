@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Moloquent;
-
 use Jenssegers\Mongodb\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -41,11 +38,16 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public function linkedSocialAccounts()
+    {
+        return $this->hasMany(LinkedSocialAccount::class);
+    }
+
     public function kelas()
     {
         return $this->hasMany(Kelas::class);
     }
-    
+
     public function user_kelas()
     {
         return $this->hasMany(UserKelas::class);

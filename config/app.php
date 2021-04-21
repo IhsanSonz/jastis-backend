@@ -181,6 +181,9 @@ return [
         //laravel-FCM
         LaravelFCM\FCMServiceProvider::class,
 
+        // socialite
+        Laravel\Socialite\SocialiteServiceProvider::class,
+
     ],
 
     /*

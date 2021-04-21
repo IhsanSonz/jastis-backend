@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
+Route::post('google', [AuthController::class, 'loginGoogle']);
 
 Route::group(['middleware' => 'jwt.verify'], function () {
 

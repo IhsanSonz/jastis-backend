@@ -46,6 +46,7 @@ class UserController extends Controller
         $error = $downstreamResponse->tokensWithError();
         return response()->json(compact('success', 'fail', 'error'));
     }
+
     public function index()
     {
         $users = User::with('user_kelas')->with('kelas')->latest()->get();

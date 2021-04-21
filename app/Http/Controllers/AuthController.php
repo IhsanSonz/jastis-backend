@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use JWTAuth;
+use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Validator;
@@ -26,7 +27,7 @@ class AuthController extends Controller
             return response()->json(['error' => $validator->errors()], 401);
         }
 
-        $user = new User();
+        $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
@@ -61,6 +62,48 @@ class AuthController extends Controller
             'message' => 'Login Successfully',
             'token' => $token,
             'data' => $user,
+        ]);
+    }
+
+    public function loginGoogle(Request $request)
+    {
+        $user = Socialite::driver('google')->userFromToken($request->token);
+        $token = null;
+        $finduser = User::where('google_id', $user->id)->first();
+
+        if ($finduser) {
+            if (!$token = JWTAuth::fromUser($user)) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'invalid Credential',
+                    'data' => null,
+                ]);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Login Successfully',
+                'token' => $token,
+                'data' => $user,
+            ]);
+        }
+
+        $newUser = new User;
+        $newUser->name = $user->name;
+        $newUser->email = $user->email;
+        $newUser->password = null;
+        $newUser->avatar = $user->avatar;
+        $newUser->google_id = $user->id;
+        $newUser->registration_id = null;
+        $newUser->save();
+
+        $token = JWTAuth::fromUser($newUser);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Login Successfully',
+            'token' => $token,
+            'data' => $newUser,
         ]);
     }
 
