@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Kelas;
 use FCM;
 use Illuminate\Http\Request;
 use LaravelFCM\Message\PayloadDataBuilder;
