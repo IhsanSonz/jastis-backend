@@ -152,7 +152,7 @@ class UserController extends Controller
         $tasks = [];
 
         foreach ($user as $pivot) {
-            $task = Kelas::find($pivot->kelas_id)->tasks;
+            $task = Task::with('kelas')->where('kelas_id', $pivot->kelas_id)->get();
             array_push($tasks, ...$task);
         }
 
