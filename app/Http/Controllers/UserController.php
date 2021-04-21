@@ -254,6 +254,34 @@ class UserController extends Controller
         ]);
     }
 
+    public function setRegistration(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        $user->registration_id = $request->registration_id;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'post data success',
+            'data' => $user,
+        ]);
+    }
+
+    public function updateRegistration(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        $user->registration_id = $request->registration_id;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'put/patch data success',
+            'data' => $user,
+        ]);
+    }
+
     public function update(Request $request, $id)
     {
         $user = User::find($id);

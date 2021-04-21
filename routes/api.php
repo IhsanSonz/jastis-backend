@@ -42,6 +42,8 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('user/{id}/sent_task', [UserController::class, 'sendTask']);
     Route::put('user/{id}/sent_task', [UserController::class, 'updateTask']);
     Route::get('user/{id}/event', [UserController::class, 'getEvent']);
+    Route::post('user/{id}/registration', [UserController::class, 'setRegistration']);
+    Route::put('user/{id}/registration', [UserController::class, 'updateRegistration']);
     Route::put('user/{id}', [UserController::class, 'update']);
     Route::delete('user/{id}', [UserController::class, 'delete']);
 
