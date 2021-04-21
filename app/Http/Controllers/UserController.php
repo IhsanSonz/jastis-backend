@@ -146,6 +146,24 @@ class UserController extends Controller
         ]);
     }
 
+    public function getTaskAct($id)
+    {
+        $user = User::findOrFail($id)->user_kelas;
+        $tasks = [];
+
+        foreach ($user as $pivot) {
+            $task = Kelas::find($pivot->kelas_id)->tasks;
+            array_push($tasks, ...$task);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $tasks,
+        ]);
+
+    }
+
     public function getTask($id)
     {
         $user = User::findOrFail($id)->tasks;
@@ -181,7 +199,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function findSentTask(Request $request, $id) {
+    public function findSentTask(Request $request, $id)
+    {
         $tu = TaskUser::where('task_id', $request->task_id)
             ->where('user_id', $id)
             ->first();
