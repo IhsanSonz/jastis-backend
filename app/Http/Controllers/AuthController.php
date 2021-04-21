@@ -69,10 +69,10 @@ class AuthController extends Controller
     {
         $user = Socialite::driver('google')->userFromToken($request->token);
         $token = null;
-        $finduser = User::where('google_id', $user->id)->first();
+        $findUser = User::where('google_id', $user->id)->first();
 
-        if ($finduser) {
-            if (!$token = JWTAuth::fromUser($user)) {
+        if ($findUser) {
+            if (!$token = JWTAuth::fromUser($findUser)) {
                 return response()->json([
                     'success' => true,
                     'message' => 'invalid Credential',
@@ -84,7 +84,7 @@ class AuthController extends Controller
                 'success' => true,
                 'message' => 'Login Successfully',
                 'token' => $token,
-                'data' => $user,
+                'data' => $findUser,
             ]);
         }
 
