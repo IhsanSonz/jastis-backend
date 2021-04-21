@@ -91,6 +91,4 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::put('event_comment/{id}', [EventCommentController::class, 'update']);
     Route::delete('event_comment/{id}', [EventCommentController::class, 'destroy']);
 
-    // test drive fcm
-    Route::post('notif', [UserController::class, 'notif']);
 });

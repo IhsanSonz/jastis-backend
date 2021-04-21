@@ -8,8 +8,8 @@ use App\Models\TaskUser;
 use App\Models\User;
 use App\Models\UserKelas;
 use FCM;
+use FCMGroup;
 use Illuminate\Http\Request;
-use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 
@@ -17,35 +17,6 @@ use LaravelFCM\Message\PayloadNotificationBuilder;
 
 class UserController extends Controller
 {
-    // this function is just for test drive
-    public function notif()
-    {
-        // return var_dump(config('fcm.http.sender_id'));
-        $optionBuilder = new OptionsBuilder();
-        $optionBuilder->setTimeToLive(60 * 20);
-
-        $notificationBuilder = new PayloadNotificationBuilder();
-        $notificationBuilder->setTitle('ini judul')
-            ->setBody('lorem ipsum dolor sit amet');
-
-        $notification = $notificationBuilder->build();
-
-        $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData(['a_data' => 'my_data']);
-
-        $option = $optionBuilder->build();
-        $notification = $notificationBuilder->build();
-        $data = $dataBuilder->build();
-
-        $token = 'ell1RfyjQ2S023GEaqjSl6:APA91bHGHJNLdGa3zOYt2sV75NtagMxZdNsFopBB0GG4no-5YcAtgK6yY15R50RBoQA6qHO4rpps9XRLWiWUr-KsevV9nwTj44_LhHVF6XFK9wn2AXAqX35uioIFpP5TiN-A9ytRcLSZ';
-
-        $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
-
-        $success = $downstreamResponse->numberSuccess();
-        $fail = $downstreamResponse->numberFailure();
-        $error = $downstreamResponse->tokensWithError();
-        return response()->json(compact('success', 'fail', 'error'));
-    }
 
     public function index()
     {
@@ -56,8 +27,6 @@ class UserController extends Controller
             'message' => 'get data success',
             'data' => $users,
         ]);
-        // $token = JWTAuth::user();
-        // return response()->json(compact('token'));
     }
 
     public function show($id)
