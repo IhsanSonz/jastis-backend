@@ -36,6 +36,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::delete('user/{id}/kelas', [UserController::class, 'disconnectKelas']);
     Route::get('user/{id}/task', [UserController::class, 'getTask']);
     Route::get('user/{id}/sent_task', [UserController::class, 'getSentTask']);
+    Route::get('user/{id}/find_st', [UserController::class, 'findSentTask']);
     Route::post('user/{id}/sent_task', [UserController::class, 'sendTask']);
     Route::put('user/{id}/sent_task', [UserController::class, 'updateTask']);
     Route::get('user/{id}/event', [UserController::class, 'getEvent']);

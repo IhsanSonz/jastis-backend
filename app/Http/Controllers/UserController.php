@@ -148,13 +148,6 @@ class UserController extends Controller
 
     public function getTask($id)
     {
-        //$task = User::find($id)->tasks;
-
-        //return response()->json([
-        //    'success' => true,
-        //    'message' => 'get data success',
-        //    'data' => $task,
-        //]);
         $user = User::findOrFail($id)->tasks;
         $tasks = [];
 
@@ -174,12 +167,6 @@ class UserController extends Controller
     public function getSentTask(Request $request, $id)
     {
         $user = User::find($id)->task_users;
-        if ($request->exists('task_id')) {
-          $task_id = $request->task_id;
-          if ($task_id) {
-              $user = $user->where('task_id', $task_id);
-          }
-        }
 
         foreach ($user as $pivot) {
             $task = Task::find($pivot->task_id);
@@ -191,6 +178,18 @@ class UserController extends Controller
             'success' => true,
             'message' => 'get data success',
             'data' => $user,
+        ]);
+    }
+
+    public function findSentTask(Request $request, $id) {
+        $tu = TaskUser::where('task_id', $request->task_id)
+            ->where('user_id', $id)
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'get data success',
+            'data' => $tu,
         ]);
     }
 
@@ -212,9 +211,7 @@ class UserController extends Controller
 
     public function updateTask(Request $request, $id)
     {
-        $pivot = TaskUser::where('user_id', $id)
-            ->where('task_id', $request->task_id)
-            ->first();
+        $pivot = TaskUser::find($id);
 
         $pivot->data = $request->data;
         $pivot->save();

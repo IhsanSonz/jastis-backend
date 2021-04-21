@@ -75,12 +75,12 @@ class TaskController extends Controller
 
     public function getSentTask($id)
     {
-        $kelas = Task::find($id)->task_users;
-
+        $taskUser = TaskUser::with('users')->where('task_id', $id)->get();
+        
         return response()->json([
             'success' => true,
             'message' => 'get data success',
-            'data' => $kelas,
+            'data' => $taskUser,
         ]);
     }
 
@@ -102,9 +102,7 @@ class TaskController extends Controller
 
     public function updateScore(Request $request, $id)
     {
-        $pivot = TaskUser::where('task_id', $id)
-            ->where('user_id', $request->user_id)
-            ->first();
+        $pivot = TaskUser::find($id);
 
         $pivot->score = $request->score;
         $pivot->save();
