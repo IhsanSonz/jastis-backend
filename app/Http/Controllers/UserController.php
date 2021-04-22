@@ -91,7 +91,7 @@ class UserController extends Controller
         $pivot->users;
         $pivot->kelas;
 
-        $groupName = $pivot->kelas->name;
+        $groupName = $pivot->kelas->code;
         $notificationKey = $pivot->kelas->notification_key;
         $user_token = [$pivot->users->registration_id];
 
@@ -137,7 +137,7 @@ class UserController extends Controller
 
         $pivot->delete();
 
-        $groupName = $pivot->kelas->name;
+        $groupName = $pivot->kelas->code;
         $notificationKey = $pivot->kelas->notification_key;
         $user_token = [$pivot->users->registration_id];
 
