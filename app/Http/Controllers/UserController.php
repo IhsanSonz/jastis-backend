@@ -107,7 +107,7 @@ class UserController extends Controller
         $notification = $notificationBuilder->build();
         $data = $dataBuilder->build();
 
-        $gurus = UserKelas::with('users')->where('kelas_id', $request->kelas_id)->where('role', 'guru')->get();
+        $gurus = UserKelas::with('users')->where('kelas_id', $kelas_id)->where('role', 'guru')->get();
         $tokens = [];
 
         foreach ($gurus as $guru) {
@@ -149,15 +149,17 @@ class UserController extends Controller
 
         $notification = $notificationBuilder->build();
 
-        $gurus = UserKelas::with('users')->where('kelas_id', $request->kelas_id)->where('role', 'guru')->get();
+        $gurus = UserKelas::with('users')->where('kelas_id', $kelas_id)->where('role', 'guru')->get();
         $tokens = [];
 
         foreach ($gurus as $guru) {
-            $token = $guru->users->registration_id;
-            array_push($tokens, $token);
+            array_push($tokens, $guru->users->registration_id);
+
         }
 
         $downstreamResponse = FCM::sendTo($tokens, null, $notification, null);
+
+        return var_dump($tokens);
 
         return response()->json([
             'success' => true,
