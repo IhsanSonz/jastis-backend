@@ -8,7 +8,6 @@ use App\Models\TaskUser;
 use App\Models\User;
 use App\Models\UserKelas;
 use FCM;
-use FCMGroup;
 use Illuminate\Http\Request;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
@@ -91,12 +90,6 @@ class UserController extends Controller
         $pivot->users;
         $pivot->kelas;
 
-        $groupName = $pivot->kelas->name;
-        $notificationKey = $pivot->kelas->notification_key;
-        $user_token = [$pivot->users->registration_id];
-
-        $key = FCMGroup::addToGroup($groupName, $notificationKey, $user_token);
-
         $notificationBuilder = new PayloadNotificationBuilder();
         $notificationBuilder->setTitle('Student Activity')
             ->setBody('A Student joined your class ' . $pivot->kelas->name);
@@ -107,7 +100,7 @@ class UserController extends Controller
         $notification = $notificationBuilder->build();
         $data = $dataBuilder->build();
 
-        $gurus = UserKelas::with('users')->where('kelas_id', $request->kelas_id)->where('role', 'guru')->get();
+        $gurus = UserKelas::with('users')->where('kelas_id', $kelas_id)->where('role', 'guru')->get();
         $tokens = [];
 
         foreach ($gurus as $guru) {
@@ -136,12 +129,6 @@ class UserController extends Controller
         $kelasName = $pivot->kelas->name;
 
         $pivot->delete();
-
-        $groupName = $pivot->kelas->name;
-        $notificationKey = $pivot->kelas->notification_key;
-        $user_token = [$pivot->users->registration_id];
-
-        $key = FCMGroup::removeFromGroup($groupName, $notificationKey, $user_token);
 
         $notificationBuilder = new PayloadNotificationBuilder();
         $notificationBuilder->setTitle('Student Activity')

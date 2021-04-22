@@ -47,9 +47,15 @@ class TaskController extends Controller
         $notification = $notificationBuilder->build();
         $data = $dataBuilder->build();
 
-        $notificationKey = $task->kelas->notification_key;
+        $members = UserKelas::with('users')->where('kelas_id', $request->kelas_id)->get();
+        $tokens = [];
 
-        $groupResponse = FCM::sendToGroup($notificationKey, null, $notification, $data);
+        foreach ($members as $member) {
+            $token = $member->users->registration_id;
+            array_push($tokens, $token);
+        }
+
+        $downstreamResponse = FCM::sendTo($tokens, null, $notification, $data);
 
         return response()->json([
             'success' => true,
